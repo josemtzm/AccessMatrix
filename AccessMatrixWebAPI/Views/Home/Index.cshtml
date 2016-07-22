@@ -1,4 +1,4 @@
-﻿<div class="jumbotron">
+﻿@*<div class="jumbotron">
     <h1>ASP.NET</h1>
     <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS, and JavaScript.</p>
     <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
@@ -21,4 +21,145 @@
         <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
         <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301872">Learn more &raquo;</a></p>
     </div>
-</div>
+</div>*@
+
+@*<!DOCTYPE html>
+
+    <?php
+        header("Cache-Control: no-cache");
+        include_once('lib/db.php');
+
+        session_start();
+
+        if( !isset($_SESSION['username']) && !isset($_SESSION['password'])){
+            header('Location: login.php');
+        }
+        $c = SetPDOConn("oracle");
+    ?>
+
+
+    <!doctype html>
+    <meta http-equiv="X-UA-Compatible" content="IE=10" />
+    <html lang="en">
+    <head>
+        <title>ISU Access Matrix</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href="css/bootstrap.min.css" rel="stylesheet" media"screen">
+        <link rel="stylesheet" type="text/css" href="css/normalize.css">
+        <link rel="stylesheet" type="text/css" href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700'>
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap-select.min.css">
+        <link rel="stylesheet" type="text/css" href="css/shared.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+
+        <script src="js/jquery-2.1.1.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/bootstrap-select.min.js"></script>
+        <script src="js/main.js"></script>
+    </head>
+
+    <body role="document">*@
+
+@model AccessMatrixWebAPI.Models.LocationsViewModel
+
+<div class="container">
+
+<section id="left-panel" class="col-lg-4 form-horizontal">
+
+    <div class="logo" class="col-lg-4">
+        <img src="~/Content/Images/logo.png" />
+        <h5>ISU Access Map</h5>
+    </div>
+
+    <!-- Search -->
+    <form id="search" class="input-group">
+        <input type="text" class="form-control">
+        <span class="input-group-btn">
+            <button class="btn btn-default glyphicon glyphicon-search"></button>
+        </span>
+    </form>
+
+    <!-- Filters -->
+    <section id="filters" class="col-lg-12">
+
+        <div class="form-group">
+            <label class="col-lg-4 control-label">LOCATION</label>
+            <select id="sltCustomers" name="sltCustomers">
+                @foreach (var item in Model.Locations)
+                {
+                    <option>@item</option>
+                }
+            </select>
+            @*<select name="user-location" id="dd_locations" class="col-lg-8" data-live-search="true" data-size="auto" title="Location Name" required>
+                <?php
+                $q = "sp_get_locations";
+                $t = ExecSQL($c['connection'], $q);
+
+                echo "
+                <option></option>";
+
+                foreach($t as $r){
+
+                $Location_id   = $r->LocationID;
+                $Location_name = $r->LocationName;
+
+                if($Location_id>-1){
+                echo "
+                <option value='$Location_id'>$Location_name</option>";
+                }
+                }
+                ?>
+                @foreach (var item in Model.Customers)
+                {
+                    <option>@item</option>
+                }
+            </select>*@
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-4 control-label">CLIENT</label>
+            <select name="user-location" id="dd_clients" class="col-lg-8" data-live-search="true" data-size="auto" title="Client Name" required></select>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-4 control-label">PROGRAM</label>
+            <select name="user-location" id="dd_programs" class="col-lg-8" data-live-search="true" data-size="auto" title="Program Name" required></select>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-4 control-label">DEPARTMENT</label>
+            <select name="user-location" id="dd_departments" class="col-lg-8" data-live-search="true" data-size="auto" title="Department Name" required></select>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-4 control-label">ROLE</label>
+            <select name="user-location" id="dd_roles" class="col-lg-8" data-live-search="true" data-size="auto" title="Role Name" required></select>
+        </div>
+
+    </section>
+
+    <!-- Save/Cancel -->
+    <section id="buttons" class="col-md-12">
+        <button id="b_save" class="btn btn-primary col-lg-6">Save</button>
+        <button id="b_cancel" class="btn btn-default col-lg-4">Cancel</button>
+    </section>
+</section>
+
+<!-- Form -->
+<section id="right-panel" class="col-lg-8">
+    <!-- Alert -->
+    <div id="msg"></div>
+
+    <div id="busy" class="col-md-12">
+        <img src="~/Content/Images/loading-gears.gif" />
+    </div>
+
+    <form id="f_permissions" role="form"></form>
+</section>
+
+</div> <!-- </content> -->
+
+@*</body>
+</html>*@

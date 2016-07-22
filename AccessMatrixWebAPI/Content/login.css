@@ -1,0 +1,69 @@
+body,div,ul,ol,li,h1,h2,h3,h4,h5,h6,form,fieldset,button,input,textarea,p,th,td { margin: 0; padding: 0; }
+
+body{
+    background-color: white;
+    text-align: center;
+    font: normal 1em Candara;
+}
+
+div img{
+    width: 40%;
+    height: auto;
+    margin-top: 100px;
+}
+
+h2{
+    color: #151515;
+    font-size: 3em;
+    font-style: normal;
+}
+
+label{
+    color: black;
+}
+
+#login {
+    position: relative;
+    margin-top: 20px;
+    top: -10px;
+    text-align: center;
+    width: 100%;
+}
+
+#login table {
+    color: gray;
+    text-align: left;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#login label{
+    margin-right: 10px;
+}
+
+input, select{
+    display: block;
+    width: 200px;
+    padding: 3px;
+}
+
+#b_login{
+    margin-top: 20px;
+}
+
+.err_msg{
+    position: relative;
+    background-color: #F6CECE;
+    border: solid 1px #8A0808;
+    margin: 5px;
+    margin-top: 20px;
+    padding: 3px 12px;
+    text-align: center;
+    width: auto;
+    border-radius: 3px;
+}
+
+#logo{
+    margin-top: 100px;
+    width: 300px;
+}

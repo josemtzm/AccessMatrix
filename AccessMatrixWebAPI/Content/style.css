@@ -1,0 +1,104 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto+Slab);
+
+html, body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	background-color: #292929;
+	
+
+}
+
+.content{	
+	padding: 0;
+	height: 100vh;
+	overflow: hidden;
+}
+
+.logo img{
+	width: 350px;
+}
+
+.logo h5{
+	position: relative;
+	font: bold 1.4em Calibri;
+	text-align: right;
+	top: -40px;
+	margin-right: 20px;
+}
+
+#left-panel {
+	display: block;
+	position: fixed;
+	padding: 10px;
+	height: 100vh;
+	min-height: 100vh;
+	background-color: white;	
+	float: left;
+	width: auto;
+	z-index: 2;
+}
+
+#search{
+	margin-top: 30px;
+	display: none;
+}
+
+#filters{
+	position: relative;
+	display: block;
+	margin-top: 60px;
+}
+
+#busy{
+	display: block;
+	position: absolute;
+	text-align: center;
+	height: 100vh;
+}
+
+#busy img{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 300px;
+}
+
+#buttons{
+	position: absolute;
+	bottom: 10px;
+	display: none;
+}
+
+#b_save{
+	margin-right: 8px;
+}
+
+#b_cancel{
+	display: none;
+}
+
+#right-panel {
+	padding: 10px;
+	height: 100vh auto;
+	min-height: 100vh;
+	background-color: lightgray;
+	margin-left: 370px;
+}
+
+.panel{
+	box-shadow: 0px 0px 18px #A7A7A7;
+}
+
+#msg{
+	display: none;
+	padding: 6px;
+	text-align: center;
+}
+
+input[type=checkbox] {
+	transform: scale(1.5);
+	-webkit-transform: scale(1.5);
+}
+

@@ -178,6 +178,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Api\ClientsController.cs" />
+    <Compile Include="Controllers\Api\DepartmentsController.cs" />
+    <Compile Include="Controllers\Api\PermissionsController.cs" />
+    <Compile Include="Controllers\Api\ProfilesController.cs" />
+    <Compile Include="Controllers\Api\ProgramsController.cs" />
+    <Compile Include="Controllers\Api\RolesController.cs" />
     <Compile Include="Controllers\Api\t_clientsController.cs" />
     <Compile Include="Models\AccessMatrixContext.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -221,6 +226,11 @@
     <Compile Include="Models\Location.cs" />
     <Compile Include="Models\OracleContext.cs" />
     <Compile Include="Models\Oracle\Clients.cs" />
+    <Compile Include="Models\Oracle\Departments.cs" />
+    <Compile Include="Models\Oracle\Permissions.cs" />
+    <Compile Include="Models\Oracle\Profiles.cs" />
+    <Compile Include="Models\Oracle\Programs.cs" />
+    <Compile Include="Models\Oracle\Roles.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\Oracle\sysdiagram.cs" />
     <Compile Include="Models\Oracle\t_clients.cs" />

@@ -10,6 +10,6 @@ namespace AccessMatrixWebAPI.Models
     public class LocationsViewModel
     {
         [Display(Name = "Name")]
-        public IEnumerable<string> Locations { get; set; }
+        public IEnumerable<t_locations> Locations { get; set; }
     }
 }

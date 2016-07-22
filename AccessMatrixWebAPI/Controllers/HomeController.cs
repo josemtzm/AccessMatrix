@@ -16,7 +16,8 @@ namespace AccessMatrixWebAPI.Controllers
         public async Task <ActionResult> Index()
         {
             var model = new LocationsViewModel();
-            using (var client = new HttpClient())
+            using (var handler = new HttpClientHandler { UseDefaultCredentials = true })
+            using (var client = new HttpClient(handler))
             {
                 client.BaseAddress = new Uri("http://localhost:8083/");
                 client.DefaultRequestHeaders.Accept.Clear();
@@ -25,7 +26,7 @@ namespace AccessMatrixWebAPI.Controllers
                 HttpResponseMessage response = await client.GetAsync("api/Locations/");
                 if (response.IsSuccessStatusCode)
                 {
-                    var result = await response.Content.ReadAsAsync<IEnumerable<string>>();
+                    var result = await response.Content.ReadAsAsync<IEnumerable<t_locations>>();
                     if (result != null)
                         model.Locations = result;
                 }

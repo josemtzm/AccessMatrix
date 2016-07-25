@@ -223,8 +223,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Location.cs" />
-    <Compile Include="Models\LocationsViewModel.cs" />
+    <Compile Include="ViewModels\ClientsViewModel.cs" />
+    <Compile Include="ViewModels\DepartmentsViewModel.cs" />
+    <Compile Include="ViewModels\FiltersViewModel.cs" />
+    <Compile Include="ViewModels\LocationsViewModel.cs" />
     <Compile Include="Models\OracleContext.cs" />
     <Compile Include="Models\Oracle\Clients.cs" />
     <Compile Include="Models\Oracle\Departments.cs" />
@@ -255,6 +257,8 @@
     <Compile Include="Models\AccessMatrix\t_permissions.cs" />
     <Compile Include="Models\AccessMatrix\t_vpn.cs" />
     <Compile Include="Models\AccessMatrix\t_workbooth.cs" />
+    <Compile Include="ViewModels\ProgramsViewModel.cs" />
+    <Compile Include="ViewModels\RolesViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />

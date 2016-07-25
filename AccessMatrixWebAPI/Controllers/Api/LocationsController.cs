@@ -1,11 +1,5 @@
-﻿using AccessMatrix.Models;
-using AccessMatrixWebAPI;
-using System;
-using System.Collections.Generic;
+﻿using AccessMatrixWebAPI;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace AccessMatrix.Controllers.Api
@@ -27,7 +21,9 @@ namespace AccessMatrix.Controllers.Api
         [Route("api/Locations/{id}")]
         public IHttpActionResult Get(string id)
         {
-            var locations = db.t_locations.Where(x => x.LocationID == id || x.LocationName.Contains(id) && x.Disabled == false);
+            var locations = db.t_locations
+                                .Where(x => x.LocationID == id || x.LocationName.Contains(id) && x.Disabled == false)
+                                .OrderByDescending(x => x.LocationName);
             if (locations == null || locations.Count() == 0)
             {
                 return NotFound();

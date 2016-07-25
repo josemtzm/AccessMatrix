@@ -86,13 +86,13 @@
 
         <div class="form-group">
             <label class="col-lg-4 control-label">LOCATION</label>
-            <select id="sltCustomers" name="sltCustomers">
+            <select id="dd_locations" class="col-lg-8" data-live-search="true" data-size="auto" title="Location Name" required>
                 @foreach (var item in Model.Locations)
                 {
-                    <option>@item</option>
+                    <option value="@item.LocationID">@item.LocationName</option>
                 }
             </select>
-            @*<select name="user-location" id="dd_locations" class="col-lg-8" data-live-search="true" data-size="auto" title="Location Name" required>
+            @*<select id="dd_locations" class="col-lg-8" data-live-search="true" data-size="auto" title="Location Name" required>
                 <?php
                 $q = "sp_get_locations";
                 $t = ExecSQL($c['connection'], $q);

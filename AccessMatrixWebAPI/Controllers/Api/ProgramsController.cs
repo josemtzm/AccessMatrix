@@ -37,8 +37,8 @@ namespace AccessMatrixWebAPI.Controllers.Api
 
         [Authorize]
         [HttpGet]
-        [Route("api/ProgramsByLocation_Client/{LocationID}/{ClientID}")]
-        public IHttpActionResult ProgramsByLocation_Client(string LocationID, string ClientID)
+        [Route("api/Programs/{LocationID}/{ClientID}")]
+        public IHttpActionResult Get(string LocationID, string ClientID)
         {
             var programs = db.Database.SqlQuery<Programs>("sp_get_programs @locationid = {0}, @clientid = {1}", LocationID, ClientID);
             if (programs == null || programs.Count() == 0)

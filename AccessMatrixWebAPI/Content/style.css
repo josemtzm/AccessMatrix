@@ -9,11 +9,11 @@ html, body {
 
 }
 
-.content{	
+/*.content{	
 	padding: 0;
 	height: 100vh;
 	overflow: hidden;
-}
+}*/
 
 .logo img{
 	width: 350px;
@@ -28,8 +28,8 @@ html, body {
 }
 
 #left-panel {
-	display: block;
-	position: fixed;
+	/*display: block;
+	position: fixed;*/
 	padding: 10px;
 	height: 100vh;
 	min-height: 100vh;

@@ -1,82 +1,98 @@
 $(document).ready(function () {
-    $(function () {
+    var Profile = {
+        ProfileID: -1,
+        LocationID: "",
+        LocationName: "",
+        ClientID: "",
+        ClientName: "",
+        ProjectID: "",
+        ProjectName: "",
+        DepartmentID: "",
+        DepartmentName: "",
+        RoleID: "",
+        RoleName: "",
+    };
+    //get client list
+    $("#dd_locations").on('change', function () {
+        var l = $("#dd_locations").val();
 
-        InitSelect();     //initialize selects
-        GetProfile();
+        GetClients(l);
+    });
 
-        //get client list
-        $("#dd_locations").on('change', function () {
-            var loc = $("#dd_locations").val();
+    //get program list
+    $("#dd_clients").on('change', function () {
+        var l = $("#dd_locations").val();
+        var c = $("#dd_clients").val();
 
-            GetClients(loc);
-        });
+        GetPrograms(l, c);
+    });
 
-        //get program list
-        $("#dd_clients").on('change', function () {
-            var l = $("#dd_locations").val();
-            var c = $("#dd_clients").val();
-
-            GetPrograms(l, c);
-        });
-
-        //get department list
-        $("#dd_programs").on('change', function () {
-            var l = $("#dd_locations").val();
-            var c = $("#dd_clients").val();
-            var p = $("#dd_programs").val();
-
-
-            GetDepartments(l, c, p);
-        });
-
-        //get role list
-        $("#dd_departments").on('change', function () {
-            var l = $("#dd_locations").val();
-            var c = $("#dd_clients").val();
-            var p = $("#dd_programs").val();
-            var d = $("#dd_departments").val();
-
-            GetRoles(l, c, p, d);
-        });
-
-        //get profile id and load profile
-        $("#dd_roles").on('change', function () {
-            var l = $("#dd_locations").val();
-            var c = $("#dd_clients").val();
-            var p = $("#dd_programs").val();
-            var d = $("#dd_departments").val();
-            var r = $("#dd_roles").val();
-
-            GetProfile(l, c, p, d, r);
-        });
-
-        //save profile changes
-        $("#b_save").click(function (e) {
-            var d = $("#f_permissions").serialize();
-
-            e.preventDefault();
-            ShowBusy(1);
-
-            $.ajax({
-                type: "POST",
-                url: "set/save.php",
-                data: d
-
-            }).done(function (html) {
-                Prompt(html);
-                ShowBusy(0);
-            });
+    //get department list
+    $("#dd_programs").on('change', function () {
+        var l = $("#dd_locations").val();
+        var c = $("#dd_clients").val();
+        var p = $("#dd_programs").val();
 
 
-        });
+        GetDepartments(l, c, p);
+    });
 
-        //reload form
-        $("#b_cancel").click(function () {
-            GetProfile();
+    //get role list
+    $("#dd_departments").on('change', function () {
+        var l = $("#dd_locations").val();
+        var c = $("#dd_clients").val();
+        var p = $("#dd_programs").val();
+        var d = $("#dd_departments").val();
+
+        GetRoles(l, c, p, d);
+    });
+
+    //get profile id and load profile
+    $("#dd_roles").on('change', function () {
+        var l = $("#dd_locations").val();
+        var c = $("#dd_clients").val();
+        var p = $("#dd_programs").val();
+        var d = $("#dd_departments").val();
+        var r = $("#dd_roles").val();
+
+        GetProfile(l, c, p, d, r);
+    });
+
+    //save profile changes
+    $("#b_save").click(function (e) {
+        var d = $("#f_permissions").serialize();
+
+        e.preventDefault();
+        ShowBusy(1);
+
+        $.ajax({
+            type: "POST",
+            url: "set/save.php",
+            data: d
+
+        }).done(function (html) {
+            Prompt(html);
+            ShowBusy(0);
         });
 
     });
 
+    //reload form
+    $("#b_cancel").click(function () {
+        GetProfile();
+    });
+
+    function Init() {
+        InitSelect();
+    }
+
+    function FillPermissions() {
+
+    }
+
+    function FillProfile() {
+
+    }
 
     function InitSelect() {
         $("select").selectpicker({
@@ -98,10 +114,9 @@ $(document).ready(function () {
         if (loc !== "") {
             $.ajax({
                 type: "GET",
-                url: "/api/ClientsByLocation/" + loc,
+                url: "/api/GetClients/" + loc,
                 contentType: 'application/json; charset=utf-8',
                 success: function (data) {
-
                     var _select = $('<select class="selectpicker">');
                     $.each(data, function (index, elem) {
                         _select.append(
@@ -115,108 +130,190 @@ $(document).ready(function () {
         }
     }
 
-    function GetPrograms(l, c) {
+    function GetPrograms(loc, cli) {
         var programs = $("#dd_programs");
 
-        if ((l !== "") && (c !== "")) {
+        if ((loc !== "") && (cli !== "")) {
 
             $.ajax({
-                type: "POST",
-                url: "get/programs.php",
-                data: {
-                    location: l,
-                    client: c
+                type: "GET",
+                url: "/api/Programs/" + loc + "/" + cli,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var _select = $('<select class="selectpicker">');
+                    $.each(data, function (index, elem) {
+                        _select.append(
+                            $('<option></option>').val(elem.ProgramID).html(elem.ProgramName)
+                        );
+                    });
+                    programs.append(_select.html());
+                    programs.selectpicker('refresh');
                 }
-
-            }).done(function (e) {
-                programs.html(e).selectpicker('refresh');
             });
 
         }
-    } //getprograms end
+    }
 
-    function GetDepartments(l, c, p) {
-        var departments = $("#dd_departments");
+    function GetDepartments(loc, cli, prog) {
+        var depts = $("#dd_departments");
 
-        if ((l !== "") && (c !== "") && (p !== "")) {
+        if ((loc !== "") && (cli !== "") && (prog !== "")) {
 
             $.ajax({
-                type: "POST",
-                url: "get/departments.php",
-                data: {
-                    location: l,
-                    client: c,
-                    program: p
+                type: "GET",
+                url: "/api/Departments/" + loc + "/" + cli + "/" + prog,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var _select = $('<select class="selectpicker">');
+                    $.each(data, function (index, elem) {
+                        _select.append(
+                            $('<option></option>').val(elem.DepartmentID).html(elem.DepartmentName)
+                        );
+                    });
+                    depts.append(_select.html());
+                    depts.selectpicker('refresh');
                 }
-
-            }).done(function (html) {
-                departments.html(html).selectpicker('refresh');
             });
 
         }
-    } //getdepartment end
+    }
 
-    function GetRoles(l, c, p, d) {
+    function GetRoles(loc, cli, prog, dept) {
         var roles = $("#dd_roles");
 
-        if ((l !== "") && (c !== "") && (p !== "") && (d !== "")) {
+        if ((loc !== "") && (cli !== "") && (prog !== "") && (dept !== "")) {
 
             $.ajax({
-                type: "POST",
-                url: "get/roles.php",
-                data: {
-                    location: l,
-                    client: c,
-                    program: p,
-                    department: d
+                type: "GET",
+                url: "/api/Roles/" + loc + "/" + cli + "/" + prog + "/" + dept,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var _select = $('<select class="selectpicker">');
+                    $.each(data, function (index, elem) {
+                        _select.append(
+                            $('<option></option>').val(elem.RoleID).html(elem.RoleName)
+                        );
+                    });
+                    roles.append(_select.html());
+                    roles.selectpicker('refresh');
                 }
-
-            }).done(function (html) {
-                roles.html(html).selectpicker('refresh');
             });
 
         }
     } //getroles end
 
-    function GetProfile(l, c, p, d, r) {
+    function GetProfile(loc, cli, prog, dept, role) {
 
         ShowBusy(1);
 
+        var Profile = {
+            ProfileID: -1,
+            LocationID: "",
+            LocationName: "",
+            ClientID: "",
+            ClientName: "",
+            ProjectID: "",
+            ProjectName: "",
+            DepartmentID: "",
+            DepartmentName: "",
+            RoleID: "",
+            RoleName: ""
+        };
+
         $.ajax({
-            type: "POST",
-            url: "get/profile.php",
-            data: {
-                location: l,
-                client: c,
-                program: p,
-                department: d,
-                role: r
+            type: "GET",
+            url: "/api/Profiles/" + loc + "/" + cli + "/" + prog + "/" + dept + "/" + role,
+            contentType: 'application/json; charset=utf-8',
+            success: function (Profiledata) {
+                Profile = {
+                    ProfileID: Profiledata[0].ProfileID,
+                    LocationID: Profiledata[0].LocationID,
+                    LocationName: Profiledata[0].LocationName,
+                    ClientID: Profiledata[0].ClientID,
+                    ClientName: Profiledata[0].ClientName,
+                    ProjectID: Profiledata[0].ProjectID,
+                    ProjectName: Profiledata[0].ProjectName,
+                    DepartmentID: Profiledata[0].DepartmentID,
+                    DepartmentName: Profiledata[0].DepartmentName,
+                    RoleID: Profiledata[0].RoleID,
+                    RoleName: Profiledata[0].RoleName,
+                };
+                $.ajax({
+                    type: "GET",
+                    url: "/api/Permissions/" + Profile.ProfileID,
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (Permissionsdata) {
+
+                        $("#f_permissions").html(Permissionsdata);
+                        ShowBusy(0);
+                        var p_id = $("#profile-id").val();
+
+                        if (p_id !== "") {
+                            $("#buttons").show();
+                        } else {
+                            $("#buttons").hide();
+                        }
+                    }
+                });
+
+                //$("#f_permissions").html(data);
+                //ShowBusy(0);
+                //var p_id = $("#profile-id").val();
+
+                //if (p_id !== "") {
+                //    $("#buttons").show();
+                //} else {
+                //    $("#buttons").hide();
+                //}
             }
-        }).done(function (e) {
-            $("#f_permissions").html(e);
-
-            ShowBusy(0);
-
-            var p_id = $("#profile-id").val();
-
-            if (p_id !== "") {
-                $("#buttons").show();
-            } else {
-                $("#buttons").hide();
-            }
-
-        }).always(function (e) {
-            ShowBusy(0);
         });
 
+        //$.ajax({
+        //    type: "GET",
+        //    url: "/api/Permissions/" + profile,
+        //    contentType: 'application/json; charset=utf-8',
+        //    success: function (data) {
+        //        $("#f_permissions").html(data);
+        //        ShowBusy(0);
+        //        var p_id = $("#profile-id").val();
 
+        //        if (p_id !== "") {
+        //            $("#buttons").show();
+        //        } else {
+        //            $("#buttons").hide();
+        //        }
+        //    }
+        //});
 
+        //$.ajax({
+        //    type: "POST",
+        //    url: "get/profile.php",
+        //    data: {
+        //        location: l,
+        //        client: c,
+        //        program: p,
+        //        department: d,
+        //        role: r
+        //    }
+        //}).done(function (e) {
+        //    $("#f_permissions").html(e);
+
+        //    ShowBusy(0);
+
+        //    var p_id = $("#profile-id").val();
+
+        //    if (p_id !== "") {
+        //        $("#buttons").show();
+        //    } else {
+        //        $("#buttons").hide();
+        //    }
+
+        //}).always(function (e) {
+        //    ShowBusy(0);
+        //});
 
 
     } //getprofile end
-
-
-
 
     function ShowBusy(status) {
         var gears = $("#busy");
@@ -230,8 +327,7 @@ $(document).ready(function () {
             settings.show();
             gears.hide();
         }
-    } //showbusy end
-
+    }
 
     function Prompt(msg, type) {
         type = type || 1;
@@ -253,5 +349,5 @@ $(document).ready(function () {
             msgbox.slideUp();
 
         }, 10000);
-    } //prompt end
+    }
 });

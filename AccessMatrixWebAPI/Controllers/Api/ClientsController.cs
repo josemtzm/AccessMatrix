@@ -38,8 +38,8 @@ namespace AccessMatrixWebAPI.Controllers.Api
 
         [Authorize]
         [HttpGet]
-        [Route("api/ClientsByLocation/{id}")]
-        public IHttpActionResult GetByLocation(string id)
+        [Route("api/GetClients/{id}")]
+        public IHttpActionResult GetClients(string id)
         {
             var clients = db.Database.SqlQuery<Clients>("sp_get_clients @site_id = {0}",id);
             if (clients == null || clients.Count() == 0)

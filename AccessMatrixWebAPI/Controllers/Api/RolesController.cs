@@ -37,8 +37,8 @@ namespace AccessMatrixWebAPI.Controllers.Api
 
         [Authorize]
         [HttpGet]
-        [Route("api/RolesByLoc_Client_Prog_Dept/{LocationID}/{ClientID}/{ProgramID}/{DeptID}")]
-        public IHttpActionResult RolesByLoc_Client_Prog_Dept(string LocationID, string ClientID, string ProgramID, string DeptID)
+        [Route("api/Roles/{LocationID}/{ClientID}/{ProgramID}/{DeptID}")]
+        public IHttpActionResult Get(string LocationID, string ClientID, string ProgramID, string DeptID)
         {
             var roles = db.Database.SqlQuery<Roles>("sp_get_roles @locationid = {0}, @clientid = {1}, @programid = {2}, @deptid = {3}", LocationID, ClientID, ProgramID, DeptID);
             if (roles == null || roles.Count() == 0)

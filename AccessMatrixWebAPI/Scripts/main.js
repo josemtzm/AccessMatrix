@@ -1,17 +1,5 @@
 $(document).ready(function () {
-    var Profile = {
-        ProfileID: -1,
-        LocationID: "",
-        LocationName: "",
-        ClientID: "",
-        ClientName: "",
-        ProjectID: "",
-        ProjectName: "",
-        DepartmentID: "",
-        DepartmentName: "",
-        RoleID: "",
-        RoleName: "",
-    };
+    Init();
     //get client list
     $("#dd_locations").on('change', function () {
         var l = $("#dd_locations").val();
@@ -84,14 +72,7 @@ $(document).ready(function () {
 
     function Init() {
         InitSelect();
-    }
-
-    function FillPermissions() {
-
-    }
-
-    function FillProfile() {
-
+        ShowBusy(0);
     }
 
     function InitSelect() {
@@ -267,6 +248,8 @@ $(document).ready(function () {
                 //}
             }
         });
+
+        $("#profile-id").val(Profile.ProfileID);
 
         //$.ajax({
         //    type: "GET",

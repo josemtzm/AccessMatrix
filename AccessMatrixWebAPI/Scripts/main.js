@@ -177,6 +177,9 @@ $(document).ready(function () {
                     });
                     roles.append(_select.html());
                     roles.selectpicker('refresh');
+                },
+                error: function (jqXHR, exception) {
+                    Prompt(jqXHR, exception, 0);
                 }
             });
 
@@ -187,55 +190,27 @@ $(document).ready(function () {
 
         ShowBusy(1);
 
-        var Profile = {
-            ProfileID: -1,
-            LocationID: "",
-            LocationName: "",
-            ClientID: "",
-            ClientName: "",
-            ProjectID: "",
-            ProjectName: "",
-            DepartmentID: "",
-            DepartmentName: "",
-            RoleID: "",
-            RoleName: ""
-        };
+        //var Profile = {
+        //    ProfileID: -1,
+        //    LocationID: "",
+        //    LocationName: "",
+        //    ClientID: "",
+        //    ClientName: "",
+        //    ProjectID: "",
+        //    ProjectName: "",
+        //    DepartmentID: "",
+        //    DepartmentName: "",
+        //    RoleID: "",
+        //    RoleName: ""
+        //};
 
         $.ajax({
             type: "GET",
             url: "/api/Profiles/" + loc + "/" + cli + "/" + prog + "/" + dept + "/" + role,
             contentType: 'application/json; charset=utf-8',
             success: function (Profiledata) {
-                Profile = {
-                    ProfileID: Profiledata[0].ProfileID,
-                    LocationID: Profiledata[0].LocationID,
-                    LocationName: Profiledata[0].LocationName,
-                    ClientID: Profiledata[0].ClientID,
-                    ClientName: Profiledata[0].ClientName,
-                    ProjectID: Profiledata[0].ProjectID,
-                    ProjectName: Profiledata[0].ProjectName,
-                    DepartmentID: Profiledata[0].DepartmentID,
-                    DepartmentName: Profiledata[0].DepartmentName,
-                    RoleID: Profiledata[0].RoleID,
-                    RoleName: Profiledata[0].RoleName,
-                };
-                $.ajax({
-                    type: "GET",
-                    url: "/api/Permissions/" + Profile.ProfileID,
-                    contentType: 'application/json; charset=utf-8',
-                    success: function (Permissionsdata) {
 
-                        $("#f_permissions").html(Permissionsdata);
-                        ShowBusy(0);
-                        var p_id = $("#profile-id").val();
-
-                        if (p_id !== "") {
-                            $("#buttons").show();
-                        } else {
-                            $("#buttons").hide();
-                        }
-                    }
-                });
+                ProfileGUI(Profiledata);
 
                 //$("#f_permissions").html(data);
                 //ShowBusy(0);
@@ -246,57 +221,48 @@ $(document).ready(function () {
                 //} else {
                 //    $("#buttons").hide();
                 //}
+            },
+            error: function (jqXHR, exception) {
+                Prompt(jqXHR, exception, 0);
             }
         });
+    }
 
-        $("#profile-id").val(Profile.ProfileID);
+    function ProfileGUI(Profiledata) {
+        $("#profile-id").val(Profiledata[0].ProfileID)
+        $("#profile-desc").val(Profiledata[0].ProfileID)
+        //LocationID: Profiledata[0].LocationID,
+        //LocationName: Profiledata[0].LocationName,
+        //ClientID: Profiledata[0].ClientID,
+        //ClientName: Profiledata[0].ClientName,
+        //ProjectID: Profiledata[0].ProjectID,
+        //ProjectName: Profiledata[0].ProjectName,
+        //DepartmentID: Profiledata[0].DepartmentID,
+        //DepartmentName: Profiledata[0].DepartmentName,
+        //RoleID: Profiledata[0].RoleID,
+        //RoleName: Profiledata[0].RoleName,
 
-        //$.ajax({
-        //    type: "GET",
-        //    url: "/api/Permissions/" + profile,
-        //    contentType: 'application/json; charset=utf-8',
-        //    success: function (data) {
-        //        $("#f_permissions").html(data);
-        //        ShowBusy(0);
-        //        var p_id = $("#profile-id").val();
+        $.ajax({
+            type: "GET",
+            url: "/api/Permissions/" + Profiledata[0].ProfileID,
+            contentType: 'application/json; charset=utf-8',
+            success: function (Permissionsdata) {
 
-        //        if (p_id !== "") {
-        //            $("#buttons").show();
-        //        } else {
-        //            $("#buttons").hide();
-        //        }
-        //    }
-        //});
+                //$("#f_permissions").html(Permissionsdata);
+                $("#profile-desc").val(Permissionsdata[0].Description);
 
-        //$.ajax({
-        //    type: "POST",
-        //    url: "get/profile.php",
-        //    data: {
-        //        location: l,
-        //        client: c,
-        //        program: p,
-        //        department: d,
-        //        role: r
-        //    }
-        //}).done(function (e) {
-        //    $("#f_permissions").html(e);
+                ShowBusy(0);
 
-        //    ShowBusy(0);
+                var p_id = $("#profile-id").val();
 
-        //    var p_id = $("#profile-id").val();
-
-        //    if (p_id !== "") {
-        //        $("#buttons").show();
-        //    } else {
-        //        $("#buttons").hide();
-        //    }
-
-        //}).always(function (e) {
-        //    ShowBusy(0);
-        //});
-
-
-    } //getprofile end
+                if (p_id !== "") {
+                    $("#buttons").show();
+                } else {
+                    $("#buttons").hide();
+                }
+            }
+        });
+    }
 
     function ShowBusy(status) {
         var gears = $("#busy");
@@ -313,6 +279,22 @@ $(document).ready(function () {
     }
 
     function Prompt(msg, type) {
+        //if (jqXHR.status === 0) {
+        //    alert('Not connect.\n Verify Network.');
+        //} else if (jqXHR.status == 404) {
+        //    alert('Requested page not found. [404]');
+        //} else if (jqXHR.status == 500) {
+        //    alert('Internal Server Error [500].');
+        //} else if (exception === 'parsererror') {
+        //    alert('Requested JSON parse failed.');
+        //} else if (exception === 'timeout') {
+        //    alert('Time out error.');
+        //} else if (exception === 'abort') {
+        //    alert('Ajax request aborted.');
+        //} else {
+        //    alert('Uncaught Error.\n' + jqXHR.responseText);
+        //}
+
         type = type || 1;
 
         var msgbox = $("#msg");
@@ -332,5 +314,6 @@ $(document).ready(function () {
             msgbox.slideUp();
 
         }, 10000);
+        ShowBusy(0);
     }
 });

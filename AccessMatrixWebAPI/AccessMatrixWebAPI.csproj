@@ -179,6 +179,7 @@
   <ItemGroup>
     <Compile Include="Controllers\Api\ClientsController.cs" />
     <Compile Include="Controllers\Api\DepartmentsController.cs" />
+    <Compile Include="Controllers\Api\DomainsController.cs" />
     <Compile Include="Controllers\Api\PermissionsController.cs" />
     <Compile Include="Controllers\Api\ProfilesController.cs" />
     <Compile Include="Controllers\Api\ProgramsController.cs" />

@@ -37,11 +37,14 @@ html, body {
 }
 
 #busy img{
-	position: absolute;
+	position: relative;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	width: 300px;
+    float: right;
+    /*background-color: lightgray;*/
+    padding-top:10px;
 }
 
 #filters{

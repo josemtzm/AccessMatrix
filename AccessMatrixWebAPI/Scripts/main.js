@@ -190,37 +190,12 @@ $(document).ready(function () {
 
         ShowBusy(1);
 
-        //var Profile = {
-        //    ProfileID: -1,
-        //    LocationID: "",
-        //    LocationName: "",
-        //    ClientID: "",
-        //    ClientName: "",
-        //    ProjectID: "",
-        //    ProjectName: "",
-        //    DepartmentID: "",
-        //    DepartmentName: "",
-        //    RoleID: "",
-        //    RoleName: ""
-        //};
-
         $.ajax({
             type: "GET",
             url: "/api/Profiles/" + loc + "/" + cli + "/" + prog + "/" + dept + "/" + role,
             contentType: 'application/json; charset=utf-8',
             success: function (Profiledata) {
-
                 ProfileGUI(Profiledata);
-
-                //$("#f_permissions").html(data);
-                //ShowBusy(0);
-                //var p_id = $("#profile-id").val();
-
-                //if (p_id !== "") {
-                //    $("#buttons").show();
-                //} else {
-                //    $("#buttons").hide();
-                //}
             },
             error: function (jqXHR, exception) {
                 Prompt(jqXHR, exception, 0);
@@ -228,7 +203,7 @@ $(document).ready(function () {
         });
     }
 
-    function GetDomains() {
+    function GetDomains(DomainID) {
         var domains = $("#ad-domain");
 
         $.ajax({
@@ -238,9 +213,14 @@ $(document).ready(function () {
             success: function (data) {
                 var _select = $('<select class="selectpicker">');
                 $.each(data, function (index, elem) {
-                    _select.append(
-                        $('<option></option>').val(elem.DomainID).html(elem.DomainAddress)
-                    );
+                    if (elem.DomainID == DomainID)
+                        _select.append(
+                        $('<option selected></option>').val(elem.DomainID).html(elem.DomainAddress)
+                        );
+                    else
+                        _select.append(
+                            $('<option></option>').val(elem.DomainID).html(elem.DomainAddress)
+                        );
                 });
                 domains.append(_select.html());
                 domains.selectpicker('refresh');
@@ -248,7 +228,7 @@ $(document).ready(function () {
         });
     }
 
-    function GetEmailDomains() {
+    function GetEmailDomains(EmailDomainID) {
         var emaildomains = $("#email-domain");
 
         $.ajax({
@@ -258,7 +238,12 @@ $(document).ready(function () {
             success: function (data) {
                 var _select = $('<select class="selectpicker">');
                 $.each(data, function (index, elem) {
-                    _select.append(
+                    if (elem.EmailID == EmailDomainID)
+                        _select.append(
+                        $('<option selected></option>').val(elem.EmailID).html(elem.EmailDomain)
+                    );
+                    else
+                        _select.append(
                         $('<option></option>').val(elem.EmailID).html(elem.EmailDomain)
                     );
                 });
@@ -268,19 +253,83 @@ $(document).ready(function () {
         });
     }
 
+    function GetWorkbooths(WorkboothID) {
+        var workbooths = $("#others-workbooth");
+
+        $.ajax({
+            type: "GET",
+            url: "/api/WorkBooths/",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                var _select = $('<select class="selectpicker">');
+                $.each(data, function (index, elem) {
+                    if (elem.WorkboothID == WorkboothID)
+                        _select.append(
+                        $('<option selected></option>').val(elem.WorkboothID).html(elem.WorkboothName)
+                    );
+                    else
+                        _select.append(
+                        $('<option></option>').val(elem.WorkboothID).html(elem.WorkboothName)
+                    );
+                });
+                workbooths.append(_select.html());
+                workbooths.selectpicker('refresh');
+            }
+        });
+    }
+    function GetVPNs(VpnID) {
+        var vpns = $("#others-vp");
+
+        $.ajax({
+            type: "GET",
+            url: "/api/VPNs/",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                var _select = $('<select class="selectpicker">');
+                $.each(data, function (index, elem) {
+                    if (elem.VpnID == VpnID)
+                        _select.append(
+                        $('<option selected></option>').val(elem.VpnID).html(elem.VpnName)
+                    );
+                    else
+                        _select.append(
+                        $('<option></option>').val(elem.VpnID).html(elem.VpnName)
+                    );
+                });
+                vpns.append(_select.html());
+                vpns.selectpicker('refresh');
+            }
+        });
+    }
+    function GetChats(ChatID) {
+        var chats = $("#others-chat");
+
+        $.ajax({
+            type: "GET",
+            url: "/api/Chats/",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                var _select = $('<select class="selectpicker">');
+                $.each(data, function (index, elem) {
+                    if (elem.ChatID == ChatID)
+                        _select.append(
+                        $('<option selected></option>').val(elem.ChatID).html(elem.ChatName)
+                    );
+                    else
+                        _select.append(
+                        $('<option></option>').val(elem.ChatID).html(elem.ChatName)
+                    );
+                });
+                chats.append(_select.html());
+                chats.selectpicker('refresh');
+            }
+        });
+    }
+
+
     function ProfileGUI(Profiledata) {
         $("#profile-id").val(Profiledata[0].ProfileID)
         $("#profile-desc").val(Profiledata[0].ProfileID)
-        //LocationID: Profiledata[0].LocationID,
-        //LocationName: Profiledata[0].LocationName,
-        //ClientID: Profiledata[0].ClientID,
-        //ClientName: Profiledata[0].ClientName,
-        //ProjectID: Profiledata[0].ProjectID,
-        //ProjectName: Profiledata[0].ProjectName,
-        //DepartmentID: Profiledata[0].DepartmentID,
-        //DepartmentName: Profiledata[0].DepartmentName,
-        //RoleID: Profiledata[0].RoleID,
-        //RoleName: Profiledata[0].RoleName,
 
         $.ajax({
             type: "GET",
@@ -297,27 +346,18 @@ $(document).ready(function () {
 
                 if (p_id !== "") {
                     $("#buttons").show();
-                    GetDomains();
-                    GetEmailDomains();
-
+                    
                     // Permissions
-                    $("#ad-domain option[value=" + Permissionsdata[0].DomainID + "]");
+                    GetDomains(Permissionsdata[0].DomainID);
                     $("#ad-ou").val(Permissionsdata[0].OU);
                     $("#ad-loginscript").val(Permissionsdata[0].LogonScript);
                     $("#ad-profiledrive option[value=" + Permissionsdata[0].ProfileDrive + "]");
                     $("#ad-profilepath").val(Permissionsdata[0].ProfilePath);
                     $("#ad-group").val(Permissionsdata[0].Membership);
-
-                    //$("#ad-changepass").attr('checked', Permissionsdata[0].ChangePW);
-                    //$("#ad-domainval").val(Permissionsdata[0].DomainID + "]");
-                    //$("#email-domain option[value=" + Permissionsdata[0].EmailID + "]");
-
                     $("#ad-changepass").attr('checked', Permissionsdata[0].ChangePW);
-                    //$("#ad-domain option[value=" + Permissionsdata[0].DomainID + "]");
-                    //$("#email-domain option[value=" + Permissionsdata[0].EmailID + "]");
 
                     // Email
-                    $("#email-domain option[value=" + Permissionsdata[0].EmailDomainID + "]");
+                    GetEmailDomains(Permissionsdata[0].EmailDomainID);
                     $("#email-smtp").val(Permissionsdata[0].GroupSMTP);
                     $("#email-email_forwarding").attr('checked', Permissionsdata[0].HasEmailForwarding);
                     $("#email-webmail").attr('checked', Permissionsdata[0].HasWebmail);
@@ -325,6 +365,13 @@ $(document).ready(function () {
                     
 
                     // Others
+                    
+                    GetWorkbooths(Permissionsdata[0].WorkboothID);
+                    GetVPNs(Permissionsdata[0].VpnID);
+                    GetChats(Permissionsdata[0].ChatID);
+                    //$("#ad-domain option[value=" + Permissionsdata[0].DomainID + "]");
+                    //$("#ad-domain option[value=" + Permissionsdata[0].DomainID + "]");
+                    //$("#ad-domain option[value=" + Permissionsdata[0].DomainID + "]");
                     $("#others-federation").attr('checked', Permissionsdata[0].HasFederation);
                     $("#others-box_acct").attr('checked', Permissionsdata[0].HasBoxAccount);
 

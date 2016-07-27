@@ -23,7 +23,7 @@ namespace AccessMatrixWebAPI.Controllers.Api
         [Authorize]
         [HttpGet]
         [Route("api/Permissions/{ProfileID}")]
-        public IHttpActionResult Get(string ProfileID)
+        public IHttpActionResult Get(int ProfileID)
         {
             var permissions = db.Database.SqlQuery<Permissions>("sp_get_permissions @profileid = {0}", ProfileID);
             if (permissions == null || permissions.Count() == 0)

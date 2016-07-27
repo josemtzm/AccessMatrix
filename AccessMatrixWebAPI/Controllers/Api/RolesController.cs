@@ -40,7 +40,7 @@ namespace AccessMatrixWebAPI.Controllers.Api
         [Route("api/Roles/{LocationID}/{ClientID}/{ProgramID}/{DeptID}")]
         public IHttpActionResult Get(string LocationID, string ClientID, string ProgramID, string DeptID)
         {
-            var roles = db.Database.SqlQuery<Roles>("sp_get_roles @locationid = {0}, @clientid = {1}, @programid = {2}, @deptid = {3}", LocationID, ClientID, ProgramID, DeptID);
+            var roles = db.Database.SqlQuery<Roles>("sp_get_roles2 @locationid = {0}, @clientid = {1}, @programid = {2}, @deptid = {3}", LocationID, ClientID, ProgramID, DeptID);
             if (roles == null || roles.Count() == 0)
             {
                 return NotFound();

@@ -228,6 +228,46 @@ $(document).ready(function () {
         });
     }
 
+    function GetDomains() {
+        var domains = $("#ad-domain");
+
+        $.ajax({
+            type: "GET",
+            url: "/api/Domains/",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                var _select = $('<select class="selectpicker">');
+                $.each(data, function (index, elem) {
+                    _select.append(
+                        $('<option></option>').val(elem.DomainID).html(elem.DomainAddress)
+                    );
+                });
+                domains.append(_select.html());
+                domains.selectpicker('refresh');
+            }
+        });
+    }
+
+    function GetEmailDomains() {
+        var emaildomains = $("#email-domain");
+
+        $.ajax({
+            type: "GET",
+            url: "/api/EmailDomains/",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                var _select = $('<select class="selectpicker">');
+                $.each(data, function (index, elem) {
+                    _select.append(
+                        $('<option></option>').val(elem.EmailID).html(elem.EmailDomain)
+                    );
+                });
+                emaildomains.append(_select.html());
+                emaildomains.selectpicker('refresh');
+            }
+        });
+    }
+
     function ProfileGUI(Profiledata) {
         $("#profile-id").val(Profiledata[0].ProfileID)
         $("#profile-desc").val(Profiledata[0].ProfileID)
@@ -257,6 +297,39 @@ $(document).ready(function () {
 
                 if (p_id !== "") {
                     $("#buttons").show();
+                    GetDomains();
+                    GetEmailDomains();
+
+                    // Permissions
+                    $("#ad-domain option[value=" + Permissionsdata[0].DomainID + "]");
+                    $("#ad-ou").val(Permissionsdata[0].OU);
+                    $("#ad-loginscript").val(Permissionsdata[0].LogonScript);
+                    $("#ad-profiledrive option[value=" + Permissionsdata[0].ProfileDrive + "]");
+                    $("#ad-profilepath").val(Permissionsdata[0].ProfilePath);
+                    $("#ad-group").val(Permissionsdata[0].Membership);
+
+                    //$("#ad-changepass").attr('checked', Permissionsdata[0].ChangePW);
+                    //$("#ad-domainval").val(Permissionsdata[0].DomainID + "]");
+                    //$("#email-domain option[value=" + Permissionsdata[0].EmailID + "]");
+
+                    $("#ad-changepass").attr('checked', Permissionsdata[0].ChangePW);
+                    //$("#ad-domain option[value=" + Permissionsdata[0].DomainID + "]");
+                    //$("#email-domain option[value=" + Permissionsdata[0].EmailID + "]");
+
+                    // Email
+                    $("#email-domain option[value=" + Permissionsdata[0].EmailDomainID + "]");
+                    $("#email-smtp").val(Permissionsdata[0].GroupSMTP);
+                    $("#email-email_forwarding").attr('checked', Permissionsdata[0].HasEmailForwarding);
+                    $("#email-webmail").attr('checked', Permissionsdata[0].HasWebmail);
+                    $("#ad-mobile_activesync").attr('checked', Permissionsdata[0].HasActiveSync);
+                    
+
+                    // Others
+                    $("#others-federation").attr('checked', Permissionsdata[0].HasFederation);
+                    $("#others-box_acct").attr('checked', Permissionsdata[0].HasBoxAccount);
+
+                    // Remarks
+                    $("#remarks").val(Permissionsdata[0].Remarks);
                 } else {
                     $("#buttons").hide();
                 }

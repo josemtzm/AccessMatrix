@@ -177,14 +177,18 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\Api\ChatsController.cs" />
     <Compile Include="Controllers\Api\ClientsController.cs" />
     <Compile Include="Controllers\Api\DepartmentsController.cs" />
     <Compile Include="Controllers\Api\DomainsController.cs" />
+    <Compile Include="Controllers\Api\EmailDomainsController.cs" />
     <Compile Include="Controllers\Api\PermissionsController.cs" />
     <Compile Include="Controllers\Api\ProfilesController.cs" />
     <Compile Include="Controllers\Api\ProgramsController.cs" />
     <Compile Include="Controllers\Api\RolesController.cs" />
     <Compile Include="Controllers\Api\t_clientsController.cs" />
+    <Compile Include="Controllers\Api\VPNsController.cs" />
+    <Compile Include="Controllers\Api\WorkBoothsController.cs" />
     <Compile Include="Models\AccessMatrixContext.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />

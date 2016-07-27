@@ -21,8 +21,8 @@ namespace AccessMatrixWebAPI.Models.Oracle
         public bool ChangePW { get; set; }
         public DateTime? ExpirationDate { get; set; }
         public string LogonScript { get; set; }
-        public char ProfilePath { get; set; }
-        public string ProfileDrive { get; set; }
+        public char ProfileDrive { get; set; }
+        public string ProfilePath{ get; set; }
         public string Membership { get; set; }
         public int EmailID { get; set; }
         public string EmailName { get; set; }

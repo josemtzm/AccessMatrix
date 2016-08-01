@@ -48,40 +48,47 @@ $(document).ready(function () {
 
     //save profile changes
     $("#b_save").click(function (e) {
-        //profile_id
-        //profile_desc
-        //ad_domain
-        //ad_ou
-        //ad_loginscript
-        //ad_profiledrive
-        //ad_profilepath
-        //ad_group
-        //ad_changepass
-        //email_domain
-        //email_smtp
-        //email_email_forwarding
-        //email_webmail
-        //ad_mobile_activesync
-        //others_workbooth
-        //others_vpn
-        //others_chat
-        //others_federation
-        //others_box_acct
-        //remarks
-
+        var Permissions = {
+            profileid: $("#profile-id").val(),
+            description: $("#profile-desc").val(),
+            domainid: $("#ad-domain").val(),
+            ou: $("#ad-ou").val(),
+            logonscript: $("#ad-loginscript").val(),
+            profiledrive: $("#ad-profiledrive").val(),
+            profilepath: $("#ad-profilepath").val(),
+            membership: $("#ad-group").val(),
+            changepw: $("#ad-changepass").val(),
+            emaildid: $("#email-domain").val(),
+            groupsmtp: $("#email-smtp").val(),
+            hasemailforwarding: $("#email-email-forwarding").val(),
+            haswebmail: $("#email-webmail").val(),
+            hasactivesync: $("#ad-mobile-activesync").val(),
+            workboothid: $("#others-workbooth").val(),
+            vpnid: $("#others-vpn").val(),
+            chatid: $("#others-chat").val(),
+            hasfederation: $("#others-federation").val(),
+            hasboxaccount: $("#others-box-acct").val(),
+            remarks: $("#remarks").val()
+        };
+        
+        //var json = JSON.stringify({ value: data });
         e.preventDefault();
         ShowBusy(1);
 
         $.ajax({
-            type: "POST",
-            url: "set/save.php",
-            data: d
+            type: "PUT",
+            url: "/api/Permissions/" + $("#profile-id").val(),
+            //contentType: "application/x-www-form-urlencode",
+            data: Permissions,
+            success: function (data) {
+                ShowBusy(0);
+            },
+            error: function (jqXHR, exception) {
+                Prompt(jqXHR, exception, 0);
+                ShowBusy(1);
 
-        }).done(function (html) {
-            Prompt(html);
-            ShowBusy(0);
+            }
         });
-
     });
 
     //reload form
@@ -134,6 +141,9 @@ $(document).ready(function () {
                     
                     clients.append(_select.html());
                     clients.selectpicker('refresh');
+                },
+                error: function (jqXHR, exception) {
+                    Prompt(jqXHR, exception, 0);
                 }
             });
         }
@@ -157,6 +167,9 @@ $(document).ready(function () {
                     });
                     programs.append(_select.html());
                     programs.selectpicker('refresh');
+                },
+                error: function (jqXHR, exception) {
+                    Prompt(jqXHR, exception, 0);
                 }
             });
 
@@ -181,6 +194,9 @@ $(document).ready(function () {
                     });
                     depts.append(_select.html());
                     depts.selectpicker('refresh');
+                },
+                error: function (jqXHR, exception) {
+                    Prompt(jqXHR, exception, 0);
                 }
             });
 
@@ -252,6 +268,9 @@ $(document).ready(function () {
                 });
                 domains.append(_select.html());
                 domains.selectpicker('refresh');
+            },
+            error: function (jqXHR, exception) {
+                Prompt(jqXHR, exception, 0);
             }
         });
     }
@@ -277,6 +296,9 @@ $(document).ready(function () {
                 });
                 emaildomains.append(_select.html());
                 emaildomains.selectpicker('refresh');
+            },
+            error: function (jqXHR, exception) {
+                Prompt(jqXHR, exception, 0);
             }
         });
     }
@@ -302,6 +324,9 @@ $(document).ready(function () {
                 });
                 workbooths.append(_select.html());
                 workbooths.selectpicker('refresh');
+            },
+            error: function (jqXHR, exception) {
+                Prompt(jqXHR, exception, 0);
             }
         });
     }
@@ -326,6 +351,9 @@ $(document).ready(function () {
                 });
                 vpns.append(_select.html());
                 vpns.selectpicker('refresh');
+            },
+            error: function (jqXHR, exception) {
+                Prompt(jqXHR, exception, 0);
             }
         });
     }
@@ -350,6 +378,9 @@ $(document).ready(function () {
                 });
                 chats.append(_select.html());
                 chats.selectpicker('refresh');
+            },
+            error: function (jqXHR, exception) {
+                Prompt(jqXHR, exception, 0);
             }
         });
     }
@@ -408,6 +439,9 @@ $(document).ready(function () {
                 } else {
                     $("#buttons").hide();
                 }
+            },
+            error: function (jqXHR, exception) {
+                Prompt(jqXHR, exception, 0);
             }
         });
     }
@@ -426,22 +460,22 @@ $(document).ready(function () {
         }
     }
 
-    function Prompt(msg, type) {
-        //if (jqXHR.status === 0) {
-        //    alert('Not connect.\n Verify Network.');
-        //} else if (jqXHR.status == 404) {
-        //    alert('Requested page not found. [404]');
-        //} else if (jqXHR.status == 500) {
-        //    alert('Internal Server Error [500].');
-        //} else if (exception === 'parsererror') {
-        //    alert('Requested JSON parse failed.');
-        //} else if (exception === 'timeout') {
-        //    alert('Time out error.');
-        //} else if (exception === 'abort') {
-        //    alert('Ajax request aborted.');
-        //} else {
-        //    alert('Uncaught Error.\n' + jqXHR.responseText);
-        //}
+    function Prompt(jqXHR, msg, type) {
+        if (jqXHR.status === 0) {
+            alert('Not connect.\n Verify Network.');
+        } else if (jqXHR.status == 404) {
+            alert('Requested page not found. [404]');
+        } else if (jqXHR.status == 500) {
+            alert('Internal Server Error [500].');
+        } else if (exception === 'parsererror') {
+            alert('Requested JSON parse failed.');
+        } else if (exception === 'timeout') {
+            alert('Time out error.');
+        } else if (exception === 'abort') {
+            alert('Ajax request aborted.');
+        } else {
+            alert('Uncaught Error.\n' + jqXHR.responseText);
+        }
 
         type = type || 1;
 

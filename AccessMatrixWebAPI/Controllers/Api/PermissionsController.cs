@@ -1,4 +1,6 @@
-﻿using AccessMatrixWebAPI.Models.Oracle;
+﻿using AccessMatrixWebAPI.Models.AccessMatrix;
+using AccessMatrixWebAPI.Models.Oracle;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,13 +37,96 @@ namespace AccessMatrixWebAPI.Controllers.Api
         }
 
         // POST: api/Permissions
-        public void Post([FromBody]string value)
+        public HttpStatusCode Post(PermissionsViewModel model)
         {
+            if (model != null)
+            {
+                try
+                {
+                    var permissions = db.Database.ExecuteSqlCommand("sp_set_permissions @profileid = {0}, @description = {1}, @domainid = {2}, @ou = {3}, @logonscript = {4}, " +
+                        "@profiledrive = {5}, @profilepath = {6}, @membership = {7}, @changepw = {8}, @emaildid = {9}, @groupsmtp = {10}, @hasemailforwarding =  {11}, " +
+                        "@haswebmail = {12}, @hasactivesync = {13}, @workboothid = {14}, @vpnid = {15}, @chatid = {16}, @hasfederation = {17}, @hasboxaccount = {18}, @remarks = {19}",
+                                model.profileid,
+                                model.description,
+                                model.domainid,
+                                model.ou,
+                                model.logonscript,
+                                model.profiledrive,
+                                model.profilepath,
+                                model.membership,
+                                model.changepw,
+                                model.emaildid,
+                                model.groupsmtp,
+                                model.hasemailforwarding,
+                                model.haswebmail,
+                                model.hasactivesync,
+                                model.workboothid,
+                                model.vpnid,
+                                model.chatid,
+                                model.hasfederation,
+                                model.hasboxaccount,
+                                model.remarks
+                                );
+                    return HttpStatusCode.OK;
+                }
+                catch (Exception ex)
+                {
+                    return HttpStatusCode.BadRequest;
+                }
+            }
+            else
+            {
+                return HttpStatusCode.Created;
+            }
         }
-
+        //// PUT: api/Permissions/5
+        //public void Put(int id, [FromBody]string value)
+        //{
+        //}
         // PUT: api/Permissions/5
-        public void Put(int id, [FromBody]string value)
+        [Authorize]
+        [HttpPut]
+        [Route("api/Permissions/{id}")]
+        public HttpStatusCode Put(int id, PermissionsViewModel model)
         {
+            if (model != null && id == model.profileid)
+            {
+                try {
+                    var permissions = db.Database.ExecuteSqlCommand("sp_set_permissions @profileid = {0}, @description = {1}, @domainid = {2}, @ou = {3}, @logonscript = {4}, " +
+                        "@profiledrive = {5}, @profilepath = {6}, @membership = {7}, @changepw = {8}, @emaildid = {9}, @groupsmtp = {10}, @hasemailforwarding =  {11}, " +
+                        "@haswebmail = {12}, @hasactivesync = {13}, @workboothid = {14}, @vpnid = {15}, @chatid = {16}, @hasfederation = {17}, @hasboxaccount = {18}, @remarks = {19}",
+                                model.profileid,
+                                model.description,
+                                model.domainid,
+                                model.ou,
+                                model.logonscript,
+                                model.profiledrive,
+                                model.profilepath,
+                                model.membership,
+                                model.changepw,
+                                model.emaildid,
+                                model.groupsmtp,
+                                model.hasemailforwarding,
+                                model.haswebmail,
+                                model.hasactivesync,
+                                model.workboothid,
+                                model.vpnid,
+                                model.chatid,
+                                model.hasfederation,
+                                model.hasboxaccount,
+                                model.remarks
+                                );
+                    return HttpStatusCode.OK;
+                }
+                catch(Exception ex)
+                {
+                    return HttpStatusCode.NotModified;
+                }
+            }
+            else
+            {
+                return HttpStatusCode.BadRequest;
+            }
         }
 
         // DELETE: api/Permissions/5

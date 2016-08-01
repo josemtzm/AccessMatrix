@@ -17,7 +17,7 @@ namespace AccessMatrixWebAPI.Controllers.Api
         [Route("api/Roles")]
         public IQueryable<t_roles> Get()
         {
-            return db.t_roles;
+            return db.t_roles.OrderBy(x => x.RoleName);
         }
 
         // GET: api/Roles/5
@@ -26,7 +26,7 @@ namespace AccessMatrixWebAPI.Controllers.Api
         [Route("api/Roles/{id}")]
         public IHttpActionResult Get(string id)
         {
-            var roles = db.t_roles.Where(x => x.RoleID == id || x.RoleName.Contains(id) && x.Disabled == false);
+            var roles = db.t_roles.Where(x => x.RoleID == id || x.RoleName.Contains(id) && x.Disabled == false).OrderBy(x => x.RoleName);
             if (roles == null || roles.Count() == 0)
             {
                 return NotFound();

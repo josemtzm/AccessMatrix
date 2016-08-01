@@ -18,7 +18,7 @@ namespace AccessMatrixWebAPI.Controllers.Api
         [Route("api/Clients")]
         public IQueryable<t_clients> Get()
         {
-            return db.t_clients;
+            return db.t_clients.OrderBy(x => x.ClientName);
         }
 
         // GET: api/Clients/5
@@ -27,7 +27,7 @@ namespace AccessMatrixWebAPI.Controllers.Api
         [Route("api/Clients/{id}")]
         public IHttpActionResult Get(string id)
         {
-            var clients = db.t_clients.Where(x => x.ClientID == id || x.ClientName.Contains(id) && x.Disabled == false);
+            var clients = db.t_clients.Where(x => x.ClientID == id || x.ClientName.Contains(id) && x.Disabled == false).OrderBy(x => x.ClientName);
             if (clients == null || clients.Count() == 0)
             {
                 return NotFound();

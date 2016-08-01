@@ -17,7 +17,7 @@ namespace AccessMatrixWebAPI.Controllers.Api
         [Route("api/Departments")]
         public IQueryable<t_departments> Get()
         {
-            return db.t_departments;
+            return db.t_departments.OrderBy(x => x.DepartmentName);
         }
 
         // GET: api/Departments/5
@@ -26,7 +26,7 @@ namespace AccessMatrixWebAPI.Controllers.Api
         [Route("api/Departments/{id}")]
         public IHttpActionResult Get(string id)
         {
-            var departments = db.t_departments.Where(x => x.DepartmentID == id || x.DepartmentName.Contains(id) && x.Disabled == false);
+            var departments = db.t_departments.Where(x => x.DepartmentID == id || x.DepartmentName.Contains(id) && x.Disabled == false).OrderBy(x => x.DepartmentName);
             if (departments == null || departments.Count() == 0)
             {
                 return NotFound();

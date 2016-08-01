@@ -17,7 +17,7 @@ namespace AccessMatrixWebAPI.Controllers.Api
         [Route("api/VPNs")]
         public IQueryable<t_vpn> Get()
         {
-            return db.t_vpn;
+            return db.t_vpn.OrderBy(x => x.VpnName);
         }
 
         // GET: api/VPNs/5
@@ -26,7 +26,7 @@ namespace AccessMatrixWebAPI.Controllers.Api
         [Route("api/VPNs/{id}")]
         public IHttpActionResult Get(int id)
         {
-            var vpn = db.t_vpn.Where(x => x.VpnID == id);
+            var vpn = db.t_vpn.Where(x => x.VpnID == id).OrderBy(x => x.VpnName);
             if (vpn == null || vpn.Count() == 0)
             {
                 return NotFound();

@@ -17,7 +17,7 @@ namespace AccessMatrixWebAPI.Controllers.Api
         [Route("api/Chats")]
         public IQueryable<t_chat> Get()
         {
-            return db.t_chat;
+            return db.t_chat.OrderBy(x=>x.ChatName);
         }
 
         // GET: api/Chats/5
@@ -26,7 +26,7 @@ namespace AccessMatrixWebAPI.Controllers.Api
         [Route("api/Chats/{id}")]
         public IHttpActionResult Get(int id)
         {
-            var chat = db.t_chat.Where(x => x.ChatID == id);
+            var chat = db.t_chat.Where(x => x.ChatID == id).OrderBy(x => x.ChatName);
             if (chat == null || chat.Count() == 0)
             {
                 return NotFound();

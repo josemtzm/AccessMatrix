@@ -17,7 +17,7 @@ namespace AccessMatrixWebAPI.Controllers.Api
         [Route("api/WorkBooths")]
         public IQueryable<t_workbooth> Get()
         {
-            return db.t_workbooth;
+            return db.t_workbooth.OrderBy(x => x.WorkboothName);
         }
 
         // GET: api/WorkBooths/5
@@ -26,7 +26,7 @@ namespace AccessMatrixWebAPI.Controllers.Api
         [Route("api/WorkBooths/{id}")]
         public IHttpActionResult Get(int id)
         {
-            var workbooth = db.t_workbooth.Where(x => x.WorkboothID == id);
+            var workbooth = db.t_workbooth.Where(x => x.WorkboothID == id).OrderBy(x => x.WorkboothName);
             if (workbooth == null || workbooth.Count() == 0)
             {
                 return NotFound();

@@ -16,7 +16,7 @@ namespace AccessMatrixWebAPI.Controllers.Api
         [Route("api/Domains")]
         public IQueryable<t_domains> Get()
         {
-            return db.t_domains;
+            return db.t_domains.OrderBy(x => x.DomainName);
         }
 
         // GET: api/Domains/5
@@ -25,7 +25,7 @@ namespace AccessMatrixWebAPI.Controllers.Api
         [Route("api/Domains/{id}")]
         public IHttpActionResult Get(int id)
         {
-            var domains = db.t_domains.Where(x => x.DomainID == id);
+            var domains = db.t_domains.Where(x => x.DomainID == id).OrderBy(x => x.DomainName);
             if (domains == null || domains.Count() == 0)
             {
                 return NotFound();

@@ -13,7 +13,7 @@ namespace AccessMatrix.Controllers.Api
         [Route("api/Locations")]
         public IQueryable<t_locations> Get()
         {   
-            return db.t_locations;
+            return db.t_locations.OrderBy(x=> x.LocationName);
         }
 
         [Authorize]
@@ -23,7 +23,7 @@ namespace AccessMatrix.Controllers.Api
         {
             var locations = db.t_locations
                                 .Where(x => x.LocationID == id || x.LocationName.Contains(id) && x.Disabled == false)
-                                .OrderByDescending(x => x.LocationName);
+                                .OrderByDescending(x => x.LocationName).ToList();
             if (locations == null || locations.Count() == 0)
             {
                 return NotFound();

@@ -48,7 +48,26 @@ $(document).ready(function () {
 
     //save profile changes
     $("#b_save").click(function (e) {
-        var d = $("#f_permissions").serialize();
+        //profile_id
+        //profile_desc
+        //ad_domain
+        //ad_ou
+        //ad_loginscript
+        //ad_profiledrive
+        //ad_profilepath
+        //ad_group
+        //ad_changepass
+        //email_domain
+        //email_smtp
+        //email_email_forwarding
+        //email_webmail
+        //ad_mobile_activesync
+        //others_workbooth
+        //others_vpn
+        //others_chat
+        //others_federation
+        //others_box_acct
+        //remarks
 
         e.preventDefault();
         ShowBusy(1);
@@ -89,8 +108,16 @@ $(document).ready(function () {
         });
     } //inittooltips
 
+    function ClearFilters() {
+        $("#dd_clients").empty();
+        $("#dd_programs").empty();
+        $("#dd_departments").empty();
+        $("#dd_roles").empty();
+    }
+
     function GetClients(loc) {
         var clients = $("#dd_clients");
+        ClearFilters();
 
         if (loc !== "") {
             $.ajax({
@@ -104,6 +131,7 @@ $(document).ready(function () {
                             $('<option></option>').val(elem.ClientID).html(elem.ClientName)
                         );
                     });
+                    
                     clients.append(_select.html());
                     clients.selectpicker('refresh');
                 }
@@ -113,7 +141,7 @@ $(document).ready(function () {
 
     function GetPrograms(loc, cli) {
         var programs = $("#dd_programs");
-
+        
         if ((loc !== "") && (cli !== "")) {
 
             $.ajax({
@@ -137,7 +165,7 @@ $(document).ready(function () {
 
     function GetDepartments(loc, cli, prog) {
         var depts = $("#dd_departments");
-
+        
         if ((loc !== "") && (cli !== "") && (prog !== "")) {
 
             $.ajax({

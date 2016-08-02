@@ -33,6 +33,7 @@ namespace AccessMatrixWebAPI.Controllers.Api
                 return NotFound();
             }
 
+
             return Ok(permissions);
         }
 
@@ -43,30 +44,7 @@ namespace AccessMatrixWebAPI.Controllers.Api
             {
                 try
                 {
-                    var permissions = db.Database.ExecuteSqlCommand("sp_set_permissions @profileid = {0}, @description = {1}, @domainid = {2}, @ou = {3}, @logonscript = {4}, " +
-                        "@profiledrive = {5}, @profilepath = {6}, @membership = {7}, @changepw = {8}, @emaildid = {9}, @groupsmtp = {10}, @hasemailforwarding =  {11}, " +
-                        "@haswebmail = {12}, @hasactivesync = {13}, @workboothid = {14}, @vpnid = {15}, @chatid = {16}, @hasfederation = {17}, @hasboxaccount = {18}, @remarks = {19}",
-                                model.profileid,
-                                model.description,
-                                model.domainid,
-                                model.ou,
-                                model.logonscript,
-                                model.profiledrive,
-                                model.profilepath,
-                                model.membership,
-                                model.changepw,
-                                model.emaildid,
-                                model.groupsmtp,
-                                model.hasemailforwarding,
-                                model.haswebmail,
-                                model.hasactivesync,
-                                model.workboothid,
-                                model.vpnid,
-                                model.chatid,
-                                model.hasfederation,
-                                model.hasboxaccount,
-                                model.remarks
-                                );
+                    SetPermissions(model);
                     return HttpStatusCode.OK;
                 }
                 catch (Exception ex)
@@ -92,13 +70,29 @@ namespace AccessMatrixWebAPI.Controllers.Api
             if (model != null && id == model.profileid)
             {
                 try {
-                    var permissions = db.Database.ExecuteSqlCommand("sp_set_permissions @profileid = {0}, @description = {1}, @domainid = {2}, @ou = {3}, @logonscript = {4}, " +
+                    SetPermissions(model);
+                    return HttpStatusCode.OK;
+                }
+                catch(Exception ex)
+                {
+                    return HttpStatusCode.NotModified;
+                }
+            }
+            else
+            {
+                return HttpStatusCode.BadRequest;
+            }
+        }
+
+        private void SetPermissions(PermissionsViewModel model)
+        {
+            var permissions = db.Database.ExecuteSqlCommand("sp_set_permissions2 @profileid = {0}, @description = {1}, @domainid = {2}, @ou = {3}, @logonscript = {4}, " +
                         "@profiledrive = {5}, @profilepath = {6}, @membership = {7}, @changepw = {8}, @emaildid = {9}, @groupsmtp = {10}, @hasemailforwarding =  {11}, " +
                         "@haswebmail = {12}, @hasactivesync = {13}, @workboothid = {14}, @vpnid = {15}, @chatid = {16}, @hasfederation = {17}, @hasboxaccount = {18}, @remarks = {19}",
                                 model.profileid,
                                 model.description,
                                 model.domainid,
-                                model.ou,
+                                model.ou == null || model.ou == "" ? String.Empty : model.ou,
                                 model.logonscript,
                                 model.profiledrive,
                                 model.profilepath,
@@ -116,17 +110,6 @@ namespace AccessMatrixWebAPI.Controllers.Api
                                 model.hasboxaccount,
                                 model.remarks
                                 );
-                    return HttpStatusCode.OK;
-                }
-                catch(Exception ex)
-                {
-                    return HttpStatusCode.NotModified;
-                }
-            }
-            else
-            {
-                return HttpStatusCode.BadRequest;
-            }
         }
 
         // DELETE: api/Permissions/5

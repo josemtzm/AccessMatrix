@@ -11,9 +11,9 @@ namespace AccessMatrixWebAPI.Models.AccessMatrix
         public int profileid { get; set; }
         public string description { get; set; }
         public int domainid { get; set; }
-        public int ou { get; set; }
+        public string ou { get; set; }
         public string logonscript { get; set; }
-        public char profiledrive { get; set; }
+        public string profiledrive { get; set; }
         public string profilepath { get; set; }
         public string membership { get; set; }
         public bool changepw { get; set; }

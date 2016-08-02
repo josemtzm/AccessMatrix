@@ -3,7 +3,7 @@ $(document).ready(function () {
     //get client list
     $("#dd_locations").on('change', function () {
         var l = $("#dd_locations").val();
-
+        
         GetClients(l);
     });
 
@@ -52,22 +52,22 @@ $(document).ready(function () {
             profileid: $("#profile-id").val(),
             description: $("#profile-desc").val(),
             domainid: $("#ad-domain").val(),
-            ou: $("#ad-ou").val(),
+            ou: $("#ad-ou").val() == '' ? '' : $("#ad-ou").val(),
             logonscript: $("#ad-loginscript").val(),
             profiledrive: $("#ad-profiledrive").val(),
             profilepath: $("#ad-profilepath").val(),
             membership: $("#ad-group").val(),
-            changepw: $("#ad-changepass").val(),
+            changepw: $("#ad-changepass").prop('checked'),
             emaildid: $("#email-domain").val(),
             groupsmtp: $("#email-smtp").val(),
-            hasemailforwarding: $("#email-email-forwarding").val(),
-            haswebmail: $("#email-webmail").val(),
-            hasactivesync: $("#ad-mobile-activesync").val(),
+            hasemailforwarding: $("#email-email_forwarding").prop('checked'),
+            haswebmail: $("#email-webmail").prop('checked'),
+            hasactivesync: $("#ad-mobile_activesync").prop('checked'),
             workboothid: $("#others-workbooth").val(),
             vpnid: $("#others-vpn").val(),
             chatid: $("#others-chat").val(),
-            hasfederation: $("#others-federation").val(),
-            hasboxaccount: $("#others-box-acct").val(),
+            hasfederation: $("#others-federation").prop('checked'),
+            hasboxaccount: $("#others-box_acct").prop('checked'),
             remarks: $("#remarks").val()
         };
         
@@ -82,6 +82,10 @@ $(document).ready(function () {
             data: Permissions,
             success: function (data) {
                 ShowBusy(0);
+                if(data == 200 )
+                    Prompt(200, 'Ok. ', 1);
+                else
+                    Prompt(data, 'Error. ', 0);
             },
             error: function (jqXHR, exception) {
                 Prompt(jqXHR, exception, 0);
@@ -93,8 +97,36 @@ $(document).ready(function () {
 
     //reload form
     $("#b_cancel").click(function () {
-        GetProfile();
+        ClearUI();
+        GetProfile( $("#dd_locations").val(), 
+                    $("#dd_clients").val(), 
+                    $("#dd_programs").val(), 
+                    $("#dd_departments").val(), 
+                    $("#dd_roles").val());
     });
+
+    function ClearUI() {
+        $("#profile-id").val("");
+        $("#profile-desc").val("");
+        $("#ad-domain").val("");
+        $("#ad-ou").val("");
+        $("#ad-loginscript").val("");
+        GetProfileDrive(-1);
+        $("#ad-profilepath").val("");
+        $("#ad-group").val("");
+        $("#ad-changepass").prop('checked', false);
+        $("#email-domain").val("");
+        $("#email-smtp").val("");
+        $("#email-email_forwarding").prop('checked', false);
+        $("#email-webmail").prop('checked', false);
+        $("#ad-mobile_activesync").prop('checked', false);
+        $("#others-workbooth").val("");
+        $("#others-vpn").val("");
+        $("#others-chat").val("");
+        $("#others-federation").prop('checked', false);
+        $("#others-box_acct").prop('checked', false);
+        $("#remarks").val("");
+    }
 
     function Init() {
         InitSelect();
@@ -120,12 +152,16 @@ $(document).ready(function () {
         $("#dd_programs").empty();
         $("#dd_departments").empty();
         $("#dd_roles").empty();
+        //GetClients('');
+        //GetPrograms('', '');
+        //GetDepartments('', '', '');
+        //GetRoles('', '', '', '');
     }
 
     function GetClients(loc) {
         var clients = $("#dd_clients");
         ClearFilters();
-
+        ClearUI();
         if (loc !== "") {
             $.ajax({
                 type: "GET",
@@ -233,6 +269,7 @@ $(document).ready(function () {
     function GetProfile(loc, cli, prog, dept, role) {
 
         ShowBusy(1);
+        ClearUI();
 
         $.ajax({
             type: "GET",
@@ -273,6 +310,15 @@ $(document).ready(function () {
                 Prompt(jqXHR, exception, 0);
             }
         });
+    }
+
+    function GetProfileDrive(ProfileDrive) {
+        var profiledrive = $("#ad-profiledrive");
+        if(ProfileDrive == -1)
+            $('#ad-profiledrive option[value=' + ProfileDrive + ']').attr('selected', 'selected');
+        else
+            $('#ad-profiledrive option').attr('selected', false);
+        profiledrive.selectpicker('refresh');
     }
 
     function GetEmailDomains(EmailDomainID) {
@@ -390,94 +436,104 @@ $(document).ready(function () {
         $("#profile-id").val(Profiledata[0].ProfileID)
         $("#profile-desc").val(Profiledata[0].ProfileID)
 
-        $.ajax({
-            type: "GET",
-            url: "/api/Permissions/" + Profiledata[0].ProfileID,
-            contentType: 'application/json; charset=utf-8',
-            success: function (Permissionsdata) {
+        GetDomains(-1);
+        GetEmailDomains(-1);
+        GetWorkbooths(-1);
+        GetVPNs(-1);
+        GetChats(-1);
 
-                //$("#f_permissions").html(Permissionsdata);
-                $("#profile-desc").val(Permissionsdata[0].Description);
+        var p_id = $("#profile-id").val();
+        if (p_id !== "") {
+            // Buttons
+            $("#buttons").show();
 
-                ShowBusy(0);
+            $.ajax({
+                type: "GET",
+                url: "/api/Permissions/" + Profiledata[0].ProfileID,
+                contentType: 'application/json; charset=utf-8',
+                success: function (Permissionsdata) {
 
-                var p_id = $("#profile-id").val();
+                    $("#profile-desc").val(Permissionsdata[0].Description);
 
-                if (p_id !== "") {
-                    $("#buttons").show();
+                    ShowBusy(0);
                     
                     // Permissions
                     GetDomains(Permissionsdata[0].DomainID);
                     $("#ad-ou").val(Permissionsdata[0].OU);
                     $("#ad-loginscript").val(Permissionsdata[0].LogonScript);
-                    $("#ad-profiledrive option[value=" + Permissionsdata[0].ProfileDrive + "]");
+                    GetProfileDrive(Permissionsdata[0].ProfileDrive);
+                    //$("#ad-profiledrive").val(Permissionsdata[0].ProfileDrive);
                     $("#ad-profilepath").val(Permissionsdata[0].ProfilePath);
                     $("#ad-group").val(Permissionsdata[0].Membership);
                     $("#ad-changepass").attr('checked', Permissionsdata[0].ChangePW);
 
                     // Email
-                    GetEmailDomains(Permissionsdata[0].EmailDomainID);
+                    GetEmailDomains(Permissionsdata[0].EmailID);
                     $("#email-smtp").val(Permissionsdata[0].GroupSMTP);
                     $("#email-email_forwarding").attr('checked', Permissionsdata[0].HasEmailForwarding);
                     $("#email-webmail").attr('checked', Permissionsdata[0].HasWebmail);
                     $("#ad-mobile_activesync").attr('checked', Permissionsdata[0].HasActiveSync);
-                    
 
                     // Others
-                    
                     GetWorkbooths(Permissionsdata[0].WorkboothID);
                     GetVPNs(Permissionsdata[0].VpnID);
                     GetChats(Permissionsdata[0].ChatID);
-                    //$("#ad-domain option[value=" + Permissionsdata[0].DomainID + "]");
-                    //$("#ad-domain option[value=" + Permissionsdata[0].DomainID + "]");
-                    //$("#ad-domain option[value=" + Permissionsdata[0].DomainID + "]");
                     $("#others-federation").attr('checked', Permissionsdata[0].HasFederation);
                     $("#others-box_acct").attr('checked', Permissionsdata[0].HasBoxAccount);
 
                     // Remarks
                     $("#remarks").val(Permissionsdata[0].Remarks);
-                } else {
-                    $("#buttons").hide();
+
+                },
+                error: function (jqXHR, exception) {
+                    Prompt(jqXHR, exception, 0);
                 }
-            },
-            error: function (jqXHR, exception) {
-                Prompt(jqXHR, exception, 0);
-            }
-        });
+
+            });
+        } else {
+            $("#buttons").hide();
+        }
     }
 
     function ShowBusy(status) {
         var gears = $("#busy");
         var settings = $("#f_permissions");
+        var panel = $("#right-panel");
 
         if (status == 1) {
             settings.hide();
+            panel.css("background-color", "white");
             gears.show();
 
         } else {
             settings.show();
+            panel.css("background-color", "lightgray");
             gears.hide();
         }
     }
 
-    function Prompt(jqXHR, msg, type) {
+    function Prompt(jqXHR, exception, type) {
         if (jqXHR.status === 0) {
-            alert('Not connect.\n Verify Network.');
+            exception += '\nNot connect.\n Verify Network.';
         } else if (jqXHR.status == 404) {
-            alert('Requested page not found. [404]');
+            //msg += '\nRequested page not found. [404]';
+            exception += '\nNo data found. [404]';
         } else if (jqXHR.status == 500) {
-            alert('Internal Server Error [500].');
+            exception += '\nInternal Server Error [500].';
         } else if (exception === 'parsererror') {
-            alert('Requested JSON parse failed.');
+            exception += '\nRequested JSON parse failed.';
         } else if (exception === 'timeout') {
-            alert('Time out error.');
+            exception += '\nTime out error.';
         } else if (exception === 'abort') {
-            alert('Ajax request aborted.');
+            exception += '\nAjax request aborted.';
+        }else if(jqXHR == 200){
+            exception += '\nData saved.';
         } else {
-            alert('Uncaught Error.\n' + jqXHR.responseText);
-        }
+            exception += '\nUncaught Error.\n' + jqXHR.responseText;
+        } 
 
-        type = type || 1;
+
+        //type = type || 1;
 
         var msgbox = $("#msg");
         var a = "";
@@ -489,7 +545,7 @@ $(document).ready(function () {
             a = '<div class="alert alert-danger" role="alert">';
         }
 
-        msgbox.html(a + msg + z).slideDown();
+        msgbox.html(a + exception + z).slideDown();
         window.scrollTo(0, 0);
 
         setTimeout(function () {

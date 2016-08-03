@@ -315,9 +315,9 @@ $(document).ready(function () {
     function GetProfileDrive(ProfileDrive) {
         var profiledrive = $("#ad-profiledrive");
         if(ProfileDrive == -1)
-            $('#ad-profiledrive option[value=' + ProfileDrive + ']').attr('selected', 'selected');
+            $('#ad-profiledrive option').prop('selected', false);
         else
-            $('#ad-profiledrive option').attr('selected', false);
+            $('#ad-profiledrive option[value=' + ProfileDrive + ']').prop('selected', true);
         profiledrive.selectpicker('refresh');
     }
 
@@ -465,21 +465,21 @@ $(document).ready(function () {
                     //$("#ad-profiledrive").val(Permissionsdata[0].ProfileDrive);
                     $("#ad-profilepath").val(Permissionsdata[0].ProfilePath);
                     $("#ad-group").val(Permissionsdata[0].Membership);
-                    $("#ad-changepass").attr('checked', Permissionsdata[0].ChangePW);
+                    $("#ad-changepass").prop('checked', Permissionsdata[0].ChangePW);
 
                     // Email
                     GetEmailDomains(Permissionsdata[0].EmailID);
                     $("#email-smtp").val(Permissionsdata[0].GroupSMTP);
-                    $("#email-email_forwarding").attr('checked', Permissionsdata[0].HasEmailForwarding);
-                    $("#email-webmail").attr('checked', Permissionsdata[0].HasWebmail);
-                    $("#ad-mobile_activesync").attr('checked', Permissionsdata[0].HasActiveSync);
+                    $("#email-email_forwarding").prop('checked', Permissionsdata[0].HasEmailForwarding);
+                    $("#email-webmail").prop('checked', Permissionsdata[0].HasWebmail);
+                    $("#ad-mobile_activesync").prop('checked', Permissionsdata[0].HasActiveSync);
 
                     // Others
                     GetWorkbooths(Permissionsdata[0].WorkboothID);
                     GetVPNs(Permissionsdata[0].VpnID);
                     GetChats(Permissionsdata[0].ChatID);
-                    $("#others-federation").attr('checked', Permissionsdata[0].HasFederation);
-                    $("#others-box_acct").attr('checked', Permissionsdata[0].HasBoxAccount);
+                    $("#others-federation").prop('checked', Permissionsdata[0].HasFederation);
+                    $("#others-box_acct").prop('checked', Permissionsdata[0].HasBoxAccount);
 
                     // Remarks
                     $("#remarks").val(Permissionsdata[0].Remarks);

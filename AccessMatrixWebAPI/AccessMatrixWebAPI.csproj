@@ -395,6 +395,7 @@
     <Content Include="Content\Images\Thumbs.db" />
     <Content Include="Content\smoothness\images\Thumbs.db" />
     <Content Include="Scripts\bootstrap-select.js.map" />
+    <None Include="Properties\PublishProfiles\access-map.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\canvasloader.min.js" />
     <Content Include="Scripts\i18n\defaults-ar_AR.js" />

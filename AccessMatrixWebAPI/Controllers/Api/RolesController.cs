@@ -35,6 +35,22 @@ namespace AccessMatrixWebAPI.Controllers.Api
             return Ok(roles);
         }
 
+        // GET: api/Roles/5
+        [Authorize]
+        [HttpGet]
+        [Route("api/GetRoles/{DeptID}")]
+        public IHttpActionResult GetRoles(string DeptID)
+        {
+            var roles = db.Database.SqlQuery<Roles>("sp_get_roles_of_department @deptid = {0}", DeptID);
+            if (roles == null || roles.Count() == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(roles);
+        }
+
+
         [Authorize]
         [HttpGet]
         [Route("api/Roles/{LocationID}/{ClientID}/{ProgramID}/{DeptID}")]

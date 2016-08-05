@@ -49,6 +49,20 @@ namespace AccessMatrixWebAPI.Controllers.Api
             return Ok(programs);
         }
 
+        [Authorize]
+        [HttpGet]
+        [Route("api/GetPrograms/{ClientID}")]
+        public IHttpActionResult GetPrograms(string ClientID)
+        {
+            var programs = db.Database.SqlQuery<Programs>("sp_get_programs_of_client @clientid = {0}", ClientID);
+            if (programs == null || programs.Count() == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(programs);
+        }
+
         // POST: api/Programs
         public void Post([FromBody]string value)
         {

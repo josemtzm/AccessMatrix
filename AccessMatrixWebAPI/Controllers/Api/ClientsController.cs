@@ -18,7 +18,7 @@ namespace AccessMatrixWebAPI.Controllers.Api
         [Route("api/Clients")]
         public IQueryable<t_clients> Get()
         {
-            return db.t_clients.OrderBy(x => x.ClientName);
+            return db.t_clients.OrderBy(x => x.ClientName).Where(x => x.Disabled == false);
         }
 
         // GET: api/Clients/5

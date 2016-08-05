@@ -1,6 +1,4 @@
-﻿@model AccessMatrixWebAPI.Models.LocationsViewModel
-
-<div class="row">
+﻿<div class="row">
     <div class="col-lg-12">
         <div class="row">
             <div id="left-panel" class="col-lg-4 col-sm-6" style="padding-left:50px;padding-top:50px;">
@@ -13,14 +11,13 @@
                     </div>
                 </div>
                 <!-- Search -->
-                <div id="logo" class="row">
-                    <div id="search" class="input-group">
-                        <input type="text" class="form-control">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default glyphicon glyphicon-search"></button>
-                        </span>
-                    </div>
+                <div id="search" class="input-group">
+                    <input type="text" class="form-control">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default glyphicon glyphicon-search"></button>
+                    </span>
                 </div>
+                <div id="msgFilters" class="col-lg-12 col-sm-12"></div>
                 <!-- Filters -->
                 <div id="f_filter" class="row">
                     <div class="form-horizontal">
@@ -28,10 +25,6 @@
                             <label for="dd_locations" class="col-lg-4 col-sm-4 control-label">LOCATION</label>
                             <div class="col-lg-6 col-sm-6">
                                 <select id="dd_locations" class="form-control" data-live-search="true" data-size="auto" title="Location Name" required>
-                                    @foreach (var item in Model.Locations)
-                                    {
-                                        <option value="@item.LocationID">@item.LocationName</option>
-                                    }
                                 </select>
                             </div>
                         </div>
@@ -44,6 +37,13 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="dd_departments" class="col-lg-4 col-sm-4 control-label">DEPARTMENT</label>
+                            <div class="col-lg-6 col-sm-6">
+                                <select id="dd_departments" class="form-control" data-live-search="true" data-size="auto" title="Department Name" required></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <label for="dd_programs" class="col-lg-4 col-sm-4 control-label">PROGRAM</label>
                             <div class="col-lg-6 col-sm-6">
                                 <select id="dd_programs" class="form-control" data-live-search="true" data-size="auto" title="Program Name" required></select>
@@ -51,9 +51,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="dd_departments" class="col-lg-4 col-sm-4 control-label">DEPARTMENT</label>
+                            <label for="dd_projects" class="col-lg-4 col-sm-4 control-label">PROJECT</label>
                             <div class="col-lg-6 col-sm-6">
-                                <select id="dd_departments" class="form-control" data-live-search="true" data-size="auto" title="Department Name" required></select>
+                                <select id="dd_projects" class="form-control" data-live-search="true" data-size="auto" title="Project Name" required></select>
                             </div>
                         </div>
 
@@ -86,11 +86,9 @@
                             <div class="form-group col-md-12">
                                 <div class="col-md-4 col-sm-4">
                                     <input type="text" id="profile-id" name="profile-id" class="form-control" disabled="disabled" />
-                                    @*       placeholder="Profile ID" value="<?php echo $p_id; ?>" READONLY />*@
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <input type="text" id="profile-desc" name="profile-desc" class="form-control" />
-                                    @*placeholder="Description" value="<?php if(($p_id)&&(is_null($r)==false)) echo $r->Description; ?>" />*@
                                 </div>
                             </div>
                         </div>
@@ -118,8 +116,6 @@
                                             <div class="col-md-10 col-sm-10">
                                                 <input id="ad-ou" type="text" class="form-control" name="ad-ou"
                                                        placeholder="domain.com/container/subcontainer" />
-                                                @*value="<?php if(($p_id)&&(is_null($r)==false)) echo $r->OU;?>"
-                                        />*@
                                             </div>
                                         </div>
 
@@ -128,8 +124,6 @@
                                             <div class="col-md-10 col-sm-10">
                                                 <input id="ad-loginscript" type="text" class="form-control" name="ad-loginscript"
                                                        placeholder="path/script.ext" />
-                                                @*value="<?php if(($p_id)&&(is_null($r)==false)) echo $r->LogonScript;?>"
-                                        />*@
                                             </div>
                                         </div>
 

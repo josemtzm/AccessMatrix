@@ -14,43 +14,9 @@ namespace AccessMatrixWebAPI.Controllers
     public class HomeController : Controller
     {
         [Authorize]
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
-            var model = new LocationsViewModel();
-            HttpResponseMessage response = new HttpResponseMessage();
-            string UrlWebAPI = WebConfigurationManager.AppSettings["UrlWebAPI"];
-            HttpClientHandler handler = new HttpClientHandler()
-            {
-                UseDefaultCredentials = true
-            };
-            HttpClient client = new HttpClient(handler);
-            
-            client.BaseAddress = new Uri(UrlWebAPI);
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            response = await client.GetAsync("api/Locations/");
-            if (response.IsSuccessStatusCode)
-            {
-                var result = await response.Content.ReadAsAsync<IEnumerable<t_locations>>();
-                if (result != null)
-                    model.Locations = result;
-            }
-            else
-            {
-                return View("Error");
-            }
-
-            //response = await client.GetAsync("api/Clients/");
-            //if (response.IsSuccessStatusCode)
-            //{
-            //    var result = await response.Content.ReadAsAsync<IEnumerable<t_locations>>();
-            //    if (result != null)
-            //        model.Locations = result;
-            //}
-
-
-            return View(model);
+            return View();
         }
     }
 }

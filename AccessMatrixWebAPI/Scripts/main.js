@@ -1,12 +1,6 @@
 $(document).ready(function () {
     Init();
-    //get client list
-    $("#dd_locations").on('change', function () {
-        var l = $("#dd_locations").val();
-        
-        GetClients(l);
-    });
-
+    
     //get program list
     $("#dd_clients").on('change', function () {
         var l = $("#dd_locations").val();
@@ -15,16 +9,26 @@ $(document).ready(function () {
         GetPrograms(l, c);
     });
 
-    //get department list
+    //get project list
     $("#dd_programs").on('change', function () {
         var l = $("#dd_locations").val();
         var c = $("#dd_clients").val();
         var p = $("#dd_programs").val();
 
 
-        GetDepartments(l, c, p);
+        GetProjects(l, c, p);
     });
-
+    //get project list
+    //$("#dd_projects").on('change', function () {
+    //    //var l = $("#dd_locations").val();
+    //    //var c = $("#dd_clients").val();
+    //    var p = $("#dd_programs").val();
+    //    //var d = $("#dd_departments").val();
+    //    if (p == '' || p === undefined)
+    //        alert('Select a program.');
+    //    else
+    //        GetRoles(l, c, p, d);
+    //});
     //get role list
     $("#dd_departments").on('change', function () {
         var l = $("#dd_locations").val();
@@ -45,6 +49,32 @@ $(document).ready(function () {
 
         GetProfile(l, c, p, d, r);
     });
+
+    //get locations list
+    //$("#dd_locations").on('change', function () {
+    //    var l = $("#dd_locations").val();
+
+    //    GetClients(l);
+    //}); 
+
+    //get client list
+    //$("#dd_locations").on('change', function () {
+    //    var l = $("#dd_locations").val();
+        
+    //    //GetClients(l);
+    //});
+
+    
+
+    ////get department list
+    //$("#dd_programs").on('change', function () {
+    //    var l = $("#dd_locations").val();
+    //    var c = $("#dd_clients").val();
+    //    var p = $("#dd_programs").val();
+
+
+    //    //GetDepartments(l, c, p);
+    //});
 
     //save profile changes
     $("#b_save").click(function (e) {
@@ -105,6 +135,8 @@ $(document).ready(function () {
                     $("#dd_roles").val());
     });
 
+    
+
     function ClearUI() {
         $("#profile-id").val("");
         $("#profile-desc").val("");
@@ -131,6 +163,76 @@ $(document).ready(function () {
     function Init() {
         InitSelect();
         ShowBusy(0);
+
+        $('#dd_programs').prop('disabled', 'disabled');
+        $('#dd_projects').prop('disabled', 'disabled');
+        $('#dd_roles').prop('disabled', 'disabled');
+
+        var locations = $("#dd_locations");
+
+        $.ajax({
+            type: "GET",
+            url: "/api/Locations",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                var _select = $('<select class="selectpicker">');
+                $.each(data, function (index, elem) {
+                    _select.append(
+                        $('<option></option>').val(elem.LocationID).html(elem.LocationName)
+                    );
+                });
+
+                locations.append(_select.html());
+                locations.selectpicker('refresh');
+            },
+            error: function (jqXHR, exception) {
+                Prompt(jqXHR, exception, 0);
+            }
+        });
+
+        var clients = $("#dd_clients");
+
+        $.ajax({
+            type: "GET",
+            url: "/api/Clients",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                var _select = $('<select class="selectpicker">');
+                $.each(data, function (index, elem) {
+                    _select.append(
+                        $('<option></option>').val(elem.ClientID).html(elem.ClientName)
+                    );
+                });
+
+                clients.append(_select.html());
+                clients.selectpicker('refresh');
+            },
+            error: function (jqXHR, exception) {
+                Prompt(jqXHR, exception, 0);
+            }
+        });
+
+        var depts = $("#dd_departments");
+
+        $.ajax({
+            type: "GET",
+            url: "/api/Departments",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                var _select = $('<select class="selectpicker">');
+                $.each(data, function (index, elem) {
+                    _select.append(
+                        $('<option></option>').val(elem.DepartmentID).html(elem.DepartmentName)
+                    );
+                });
+                depts.append(_select.html());
+                depts.selectpicker('refresh');
+            },
+            error: function (jqXHR, exception) {
+                Prompt(jqXHR, exception, 0);
+            }
+        });
+        
     }
 
     function InitSelect() {
@@ -145,6 +247,7 @@ $(document).ready(function () {
         $(".tooltips").tooltip({
             'trigger': 'hover focus'
         });
+        //$("#dd_programs-button").tooltip({ items: "span", content: 'This is select' });
     } //inittooltips
 
     function ClearFilters() {
@@ -157,12 +260,11 @@ $(document).ready(function () {
         //GetDepartments('', '', '');
         //GetRoles('', '', '', '');
     }
-
+ 
     function GetClients(loc) {
         var clients = $("#dd_clients");
-        ClearFilters();
-        ClearUI();
-        if (loc !== "") {
+        
+        if (loc !== "" && loc !== undefined) {
             $.ajax({
                 type: "GET",
                 url: "/api/GetClients/" + loc,
@@ -174,7 +276,7 @@ $(document).ready(function () {
                             $('<option></option>').val(elem.ClientID).html(elem.ClientName)
                         );
                     });
-                    
+
                     clients.append(_select.html());
                     clients.selectpicker('refresh');
                 },
@@ -187,14 +289,18 @@ $(document).ready(function () {
 
     function GetPrograms(loc, cli) {
         var programs = $("#dd_programs");
-        
-        if ((loc !== "") && (cli !== "")) {
+
+        //ClearUI();
+        programs.empty();
+
+        if ((loc !== "" && loc !== undefined) && (cli !== "" && cli !== undefined)) {
 
             $.ajax({
                 type: "GET",
                 url: "/api/Programs/" + loc + "/" + cli,
                 contentType: 'application/json; charset=utf-8',
                 success: function (data) {
+                    programs.prop('disabled', false);
                     var _select = $('<select class="selectpicker">');
                     $.each(data, function (index, elem) {
                         _select.append(
@@ -209,6 +315,83 @@ $(document).ready(function () {
                 }
             });
 
+        }
+        else if (cli !== "" || cli !== undefined) {
+            $.ajax({
+                type: "GET",
+                url: "/api/GetPrograms/" + cli,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    programs.prop('disabled', false);
+                    var _select = $('<select class="selectpicker">');
+                    $.each(data, function (index, elem) {
+                        _select.append(
+                            $('<option></option>').val(elem.ProgramID).html(elem.ProgramName)
+                        );
+                    });
+                    programs.append(_select.html());
+                    programs.selectpicker('refresh');
+                },
+                error: function (jqXHR, exception) {
+                    Prompt(jqXHR, exception, 0);
+                }
+            }); 
+        }
+        else {
+            alert('Select a client');
+        }
+    }
+
+    function GetProjects(loc, cli, prog) {
+        var projects = $("#dd_projects");
+
+        projects.empty();
+
+        if ((loc !== "" && loc !== undefined) && (cli !== "" && cli !== undefined) && (prog !== "" && prog !== undefined)) {
+
+            $.ajax({
+                type: "GET",
+                url: "/api/Projects/" + loc + "/" + cli + "/" + prog,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    projects.prop('disabled', false);
+                    var _select = $('<select class="selectpicker">');
+                    $.each(data, function (index, elem) {
+                        _select.append(
+                            $('<option></option>').val(elem.ProjectID).html(elem.ProjectName)
+                        );
+                    });
+                    projects.append(_select.html());
+                    projects.selectpicker('refresh');
+                },
+                error: function (jqXHR, exception) {
+                    Prompt(jqXHR, exception, 0);
+                }
+            });
+        }
+        else if (prog !== "" || prog !== undefined) {
+            $.ajax({
+                type: "GET",
+                url: "/api/GetProjects/" + prog,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    projects.prop('disabled', false);
+                    var _select = $('<select class="selectpicker">');
+                    $.each(data, function (index, elem) {
+                        _select.append(
+                            $('<option></option>').val(elem.ProjectID).html(elem.ProjectName)
+                        );
+                    });
+                    projects.append(_select.html());
+                    projects.selectpicker('refresh');
+                },
+                error: function (jqXHR, exception) {
+                    Prompt(jqXHR, exception, 0);
+                }
+            });
+        }
+        else {
+            alert('Select a client');
         }
     }
 
@@ -236,19 +419,22 @@ $(document).ready(function () {
                 }
             });
 
-        }
+        } 
     }
 
     function GetRoles(loc, cli, prog, dept) {
         var roles = $("#dd_roles");
 
-        if ((loc !== "") && (cli !== "") && (prog !== "") && (dept !== "")) {
+        roles.empty();
+
+        if ((loc !== "" && loc !== undefined) && (cli !== "" && cli !== undefined) && (prog !== "" && pro !== undefined) && (dept !== "" && dept !== undefined)) {
 
             $.ajax({
                 type: "GET",
                 url: "/api/Roles/" + loc + "/" + cli + "/" + prog + "/" + dept,
                 contentType: 'application/json; charset=utf-8',
                 success: function (data) {
+                    roles.prop('disabled', false);
                     var _select = $('<select class="selectpicker">');
                     $.each(data, function (index, elem) {
                         _select.append(
@@ -263,8 +449,31 @@ $(document).ready(function () {
                 }
             });
 
+        } else if (dept !== '' && dept !== undefined) {
+            $.ajax({
+                type: "GET",
+                url: "/api/GetRoles/" + dept,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    roles.prop('disabled', false);
+                    var _select = $('<select class="selectpicker">');
+                    $.each(data, function (index, elem) {
+                        _select.append(
+                            $('<option></option>').val(elem.RoleID).html(elem.RoleName)
+                        );
+                    });
+                    roles.append(_select.html());
+                    roles.selectpicker('refresh');
+                },
+                error: function (jqXHR, exception) {
+                    Prompt(jqXHR, exception, 0);
+                }
+            });
         }
-    } //getroles end
+        else{
+            alert('Select a department');
+        }
+    }
 
     function GetProfile(loc, cli, prog, dept, role) {
 
@@ -510,6 +719,28 @@ $(document).ready(function () {
             panel.css("background-color", "lightgray");
             gears.hide();
         }
+    }
+
+    function alert(message) {
+        var msgboxFilter = $("#msgFilters");
+        var a = "";
+        var z = "</div>";
+
+        //type = type || 1;
+
+        if (type == 1) {
+            a = '<div class="alert alert-success" role="alert">';
+        } else {
+            a = '<div class="alert alert-danger" role="alert">';
+        }
+
+        msgboxFilter.html(a + message + z).slideDown();
+        window.scrollTo(0, 0);
+
+        setTimeout(function () {
+            msgboxFilter.slideUp();
+
+        }, 10000);
     }
 
     function Prompt(jqXHR, exception, type) {

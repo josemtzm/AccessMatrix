@@ -168,6 +168,8 @@ $(document).ready(function () {
         $('#dd_projects').prop('disabled', 'disabled');
         $('#dd_roles').prop('disabled', 'disabled');
 
+        //GetChats();
+
         var locations = $("#dd_locations");
 
         $.ajax({
@@ -239,7 +241,7 @@ $(document).ready(function () {
         $("select").selectpicker({
             size: 8
         });
-
+        $("#selectable-1").selectable();
         //$("#incident-information select").selectpicker();
     }
 
@@ -427,7 +429,7 @@ $(document).ready(function () {
 
         roles.empty();
 
-        if ((loc !== "" && loc !== undefined) && (cli !== "" && cli !== undefined) && (prog !== "" && pro !== undefined) && (dept !== "" && dept !== undefined)) {
+        if ((loc !== "" && loc !== undefined) && (cli !== "" && cli !== undefined) && (prog !== "" && prog !== undefined) && (dept !== "" && dept !== undefined)) {
 
             $.ajax({
                 type: "GET",
@@ -613,32 +615,48 @@ $(document).ready(function () {
         });
     }
     function GetChats(ChatID) {
-        var chats = $("#others-chat");
+        //var _divChat = $("#others-chat");
 
-        $.ajax({
-            type: "GET",
-            url: "/api/Chats/",
-            contentType: 'application/json; charset=utf-8',
-            success: function (data) {
-                var _select = $('<select class="selectpicker">');
-                $.each(data, function (index, elem) {
-                    if (elem.ChatID == ChatID)
-                        _select.append(
-                        $('<option selected></option>').val(elem.ChatID).html(elem.ChatName)
-                    );
-                    else
-                        _select.append(
-                        $('<option></option>').val(elem.ChatID).html(elem.ChatName)
-                    );
-                });
-                chats.append(_select.html());
-                chats.selectpicker('refresh');
-            },
-            error: function (jqXHR, exception) {
-                Prompt(jqXHR, exception, 0);
-            }
-        });
+        //$.ajax({
+        //    type: "GET",
+        //    url: "/api/Chats/",
+        //    contentType: 'application/json; charset=utf-8',
+        //    success: function (data) {
+        //        $.each(data, function (index, elem) {
+        //            if (elem.ChatID == ChatID)
+        //                _divChat.append(
+        //                $('<input selected id="' + elem.ChatName + '" type="radio" ' + elem.ChatID + '></input>'));
+        //            else
+        //                _divChat.append(
+        //                $('<input id="' + elem.ChatName + '" type="radio" ' + elem.ChatID + '></input>'));
+        //        });
+        //        _divChat.append(_divChat.html());
+        //        _divChat.selectpicker('refresh');
+        //    },
+        //    error: function (jqXHR, exception) {
+        //        Prompt(jqXHR, exception, 0);
+        //    }
+        //});
     }
+
+    //function GetChats() {
+    //    var _divChat = $("#others-chat");
+
+    //    $.ajax({
+    //        type: "GET",
+    //        url: "/api/Chats/",
+    //        contentType: 'application/json; charset=utf-8',
+    //        success: function (data) {
+    //            $.each(data, function (index, elem) {
+    //                    _divChat.append(
+    //                    $('<input id="' + elem.ChatName + '" type="checkbox" ' + elem.ChatID + '>' + elem.ChatName + '</input>'));
+    //            });
+    //        },
+    //        error: function (jqXHR, exception) {
+    //            Prompt(jqXHR, exception, 0);
+    //        }
+    //    });
+    //}
 
 
     function ProfileGUI(Profiledata) {

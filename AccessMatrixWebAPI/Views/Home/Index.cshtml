@@ -128,7 +128,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="ad-profiledrive" class="col-md-2 col-sm-2 control-label">Profile Path</label>
+                                            <label for="ad-profiledrive" class="col-md-2 col-sm-2 control-label">Shared Drive</label>
                                             <div class="col-md-10 col-sm-10 form-inline">
                                                 <select id="ad-profiledrive" class="form-control" name="ad-profiledrive" data-live-search="true" data-size="auto" title="Drive">
                                                     @for (int x = 78; x <= 90; x++)
@@ -136,33 +136,23 @@
                                                         char drive = (Char)x;
                                                         <option value="@drive">@drive :</option>;
                                                     }
-                                                    @*<option></option>
-                                            <?php
-                                            for ($x = 78; $x <= 90; $x++) {
-                                            $drive = chr($x);
-
-                                            if ($drive == $r->ProfileDrive){
-                                            $selected = "SELECTED";
-                                            }else{
-                                            $selected="";
-                                            }
-                                            echo "
-                                            <option value='$drive' $selected>$drive:</option>";
-                                            }
-                                            ?>*@
                                                 </select>
                                                 <input id="ad-profilepath" type="text" class="form-control" name="ad-profilepath"
                                                        placeholder="\\server\path" />
-                                                @*value="<?php if(($p_id)&&(is_null($r)==false)) echo $r->ProfilePath;?>" />*@
                                             </div>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="ad-group" class="col-md-2 col-sm-2 control-label">Groups</label>
+                                            <label for="ad-group" class="col-md-2 col-sm-2 control-label">Member of</label>
                                             <div class="col-md-10 col-sm-10">
+                                                <select id="ad-sec_group" class="form-control" name="ad-sec_group" data-live-search="true" data-size="auto" title="Security groups">
+                                                    @for (int x = 1; x <= 10; x++)
+                                                    {
+                                                        <option value="@x">Option @x:</option>;
+                                                    }
+                                                </select>
                                                 <textarea id="ad-group" class="form-control" name="ad-group" rows="4" cols="60"
                                                           placeholder="Domain\GroupName"></textarea>
-                                                @*><?php if(($p_id)&&(is_null($r)==false)){ $groups = str_replace(';', "\n", $r->Membership); echo trim($groups); } ?>*@
                                             </div>
                                         </div>
 
@@ -170,8 +160,6 @@
                                             <label for="ad-changepass" class="control-label col-md-10 col-sm-10 col-lg-offset-2">
                                                 <input id="ad-changepass" type="checkbox" name="ad-changepass" class="checkbox-inline" />
                                                 Change password upon login
-                                                @*<?php if (($p_id) && (is_null($r)==false) && $r->ChangePW == 1 ) echo "checked" ; ?> />
-                                        Change password upon login*@
                                             </label>
                                         </div>
 
@@ -196,28 +184,6 @@
                                                 <label for="email-domain" class="col-md-4 col-sm-4 control-label">Domain</label>
                                                 <div class="col-md-8 col-sm-8">
                                                     <select class="form-control" name="email-domain" id="email-domain" data-live-search="true" data-size="auto" title="Email Domain">
-                                                        @*<?php
-                                                if($p_id){
-                                                $q = "select * from t_emaildomains";
-                                                $t = ExecSQL($c['connection'], $q);
-
-                                                //echo "
-                                                <option value=''></option>";
-
-                                                foreach($t as $rr){
-
-                                                $selected = "";
-                                                $dd_id   = $rr->EmailID;
-                                                $dd_name = $rr->EmailDomain;
-
-                                                if($dd_id == $r->EmailID) $selected = "SELECTED";
-
-                                                echo "
-                                                <option value='$dd_id' $selected>$dd_name</option>";
-                                                }
-                                                }
-
-                                                ?>*@
                                                     </select>
                                                 </div>
                                             </div>
@@ -226,7 +192,6 @@
                                                 <label for="email-smtp" class="col-md-4 col-sm-4 control-label">SMTP</label>
                                                 <div class="col-md-8 col-sm-8">
                                                     <input type="text" class="form-control" name="email-smtp" id="email-smtp" />
-                                                    @*value="<?php if(($p_id)&&(is_null($r)==false)) echo $r->GroupSMTP;?>" />*@
                                                 </div>
                                             </div>
 
@@ -234,20 +199,17 @@
                                                 <label for="email-email_forwarding" class="checkbox-inline">
                                                     <input id="email-email_forwarding" type="checkbox" name="email-email_forwarding" />
                                                     Email Forwarding
-                                                    @*<?php if (($p_id) && (is_null($r)==false) && $r->HasEmailForwarding ==1 ) echo "checked" ; ?> >*@
 
                                                 </label><br />
 
                                                 <label for="email-webmail" class="checkbox-inline">
                                                     <input id="email-webmail" type="checkbox" name="email-webmail" />
                                                     Webmail
-                                                    @*<?php if ( ($p_id) && (is_null($r)==false) && $r->HasWebmail ==1 ) echo "checked" ; ?> > Webmail*@
                                                 </label><br />
 
                                                 <label for="ad-mobile_activesync" class="checkbox-inline">
                                                     <input id="ad-mobile_activesync" type="checkbox" name="ad-mobile_activesync" />
                                                     Mobile Activesync
-                                                    @*<?php if ( ($p_id) && (is_null($r)==false) && $r->HasActiveSync ==1 ) echo "checked" ; ?> > Mobile Activesync*@
                                                 </label>
                                             </div>
 
@@ -269,28 +231,6 @@
                                                 <label for="others-workbooth" class="col-md-2 col-sm-2 control-label">WB</label>
                                                 <div class="col-md-10 col-sm-10">
                                                     <select id="others-workbooth" class="form-control col-sm-10" name="others-workbooth" data-live-search="true" data-size="auto" title="Select WB">
-                                                        @*<?php
-                                                if($p_id){
-                                                $q = "select * from t_workbooth";
-                                                $t = ExecSQL($c['connection'], $q);
-
-                                                //echo "
-                                                <option value=''></option>";
-
-                                                foreach($t as $rr){
-
-                                                $selected = "";
-                                                $dd_id   = $rr->WorkboothID;
-                                                $dd_name = $rr->WorkboothName;
-
-                                                if($dd_id == $r->WorkboothID) $selected = "SELECTED";
-
-                                                echo "
-                                                <option value='$dd_id' $selected>$dd_name</option>";
-                                                }
-
-                                                }
-                                                ?>*@
                                                     </select>
                                                 </div>
                                             </div>
@@ -299,56 +239,19 @@
                                                 <label for="others-vp" class="col-md-2 col-sm-2 control-label"> VPN </label>
                                                 <div class="col-md-10 col-sm-10">
                                                     <select id="others-vp" class="form-control" name="others-vpn" data-live-search="true" data-size="auto" title="Select VPN">
-                                                        @*<?php
-                                                if($p_id){
-                                                $q = "select * from t_vpn";
-                                                $t = ExecSQL($c['connection'], $q);
-
-                                                //echo "
-                                                <option value=''></option>";
-
-                                                foreach($t as $rr){
-
-                                                $selected = "";
-                                                $dd_id   = $rr->VpnID;
-                                                $dd_name = $rr->VpnName;
-
-                                                if($dd_id == $r->VpnID) $selected = "SELECTED";
-
-                                                echo "
-                                                <option value='$dd_id' $selected>$dd_name</option>";
-                                                }
-                                                }
-
-                                                ?>*@
                                                     </select>
                                                 </div>
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="others-chat" class="col-md-2 col-sm-2 control-label"> Chat </label>
-                                                <div class="col-md-10 col-sm-10">
-                                                    <select id="others-chat" class="form-control" name="others-chat" data-live-search="true" data-size="auto" title="Select VPN">
-                                                        @*<?php
-                                                if($p_id){
-                                                $q = "select * from t_chat";
-                                                $t = ExecSQL($c['connection'], $q);
-
-                                                foreach($t as $rr){
-
-                                                $selected = "";
-                                                $dd_id   = $rr->ChatID;
-                                                $dd_name = $rr->ChatName;
-
-                                                if($dd_id == $r->ChatID) $selected = "SELECTED";
-
-                                                echo "
-                                                <option value='$dd_id' $selected>$dd_name</option>";
-                                                }
-                                                }
-
-                                                ?>*@
-                                                    </select>
+                                                <div class="col-md-10 col-sm-10" id="others-chat">
+                                                    <input id="skype" type="checkbox" name="skype" />
+                                                    Skype for Business  
+                                                    <input id="pandion" type="checkbox" name="pandion" />
+                                                    Pandion
+                                                    <input id="pidgin" type="checkbox" name="pidgin" />
+                                                    Pidgin
                                                 </div>
                                             </div>
 
@@ -356,12 +259,10 @@
                                                 <label for="others-federation" class="checkbox-inline">
                                                     <input id="others-federation" type="checkbox" name="others-federation" />
                                                     Federation
-                                                    @*<?php if (($p_id) && (is_null($r)==false) && $r->HasFederation ==1 ) echo "checked" ; ?> > Federation*@
                                                 </label><br>
                                                 <label for="others-box_acct" class="checkbox-inline">
                                                     <input id="others-box_acct" type="checkbox" name="others-box_acct" />
                                                     BOX Account
-                                                    @*<?php if (($p_id) && (is_null($r)==false) && $r->HasBoxAccount ==1) echo "checked" ; ?> > BOX Account*@
                                                 </label>
                                             </div>
                                         </div>
@@ -373,7 +274,6 @@
                         <div class="row">
                             <div class="col-lg-12" style="margin:10px;">
                                 <textarea id="remarks" class="form-control" name="remarks" rows="7" cols="40" placeholder="Remarks">
-                                    @*<?php if(($p_id)&&(is_null($r)==false)) echo trim($r->Remarks);?>*@
                                 </textarea>
                             </div>
                         </div>

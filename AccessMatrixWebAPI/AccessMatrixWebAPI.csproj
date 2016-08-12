@@ -213,6 +213,7 @@
     <Compile Include="Controllers\Api\ProgramsController.cs" />
     <Compile Include="Controllers\Api\ProjectsController.cs" />
     <Compile Include="Controllers\Api\RolesController.cs" />
+    <Compile Include="Controllers\Api\SecurityGroupsController.cs" />
     <Compile Include="Controllers\Api\t_clientsController.cs" />
     <Compile Include="Controllers\Api\VPNsController.cs" />
     <Compile Include="Controllers\Api\WorkBoothsController.cs" />
@@ -256,7 +257,38 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccessMatrix\PermissionsViewModel.cs" />
+    <Compile Include="Models\AD\AUD_PROFILES.cs" />
+    <Compile Include="Models\AD\AUD_PROFILE_ASSGS.cs" />
+    <Compile Include="Models\AD\AUD_PROFILE_OU.cs" />
+    <Compile Include="Models\AD\AUD_PROFILE_SEC_GRP.cs" />
+    <Compile Include="Models\AD\CLT.cs" />
+    <Compile Include="Models\AD\CLT_PNT_ORG.cs" />
+    <Compile Include="Models\AD\DEPT.cs" />
+    <Compile Include="Models\AD\DOMAIN.cs" />
+    <Compile Include="Models\AD\JOB.cs" />
+    <Compile Include="Models\AD\Location.cs" />
+    <Compile Include="Models\AD\SecurityGroups.cs" />
     <Compile Include="Models\Oracle\Projects.cs" />
+    <Compile Include="Models\AD\OU.cs" />
+    <Compile Include="Models\AD\PRJ.cs" />
+    <Compile Include="Models\AD\PROFILE.cs" />
+    <Compile Include="Models\AD\PROFILE_ASSIGNMENTS.cs" />
+    <Compile Include="Models\AD\PROFILE_OU.cs" />
+    <Compile Include="Models\AD\PROFILE_SEC_GRP.cs" />
+    <Compile Include="Models\AD\PROG.cs" />
+    <Compile Include="Models\AD\SEC_GRPS.cs" />
+    <Compile Include="Models\AD\STG_CLTS.cs" />
+    <Compile Include="Models\AD\STG_CLT_PNT_ORG.cs" />
+    <Compile Include="Models\AD\STG_DEPTS.cs" />
+    <Compile Include="Models\AD\STG_JOBS.cs" />
+    <Compile Include="Models\AD\STG_LOCATIONS.cs" />
+    <Compile Include="Models\AD\STG_OUS.cs" />
+    <Compile Include="Models\AD\STG_PRJS.cs" />
+    <Compile Include="Models\AD\STG_PROGS.cs" />
+    <Compile Include="Models\AD\STG_SEC_GRPS.cs" />
+    <Compile Include="Models\AD\sysdiagram.cs" />
+    <Compile Include="Models\USVIA.cs" />
+    <Compile Include="Models\AD\V_PROFILE_D.cs" />
     <Compile Include="ViewModels\ClientsViewModel.cs" />
     <Compile Include="ViewModels\DepartmentsViewModel.cs" />
     <Compile Include="ViewModels\FiltersViewModel.cs" />

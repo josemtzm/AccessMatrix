@@ -143,16 +143,10 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="ad-group" class="col-md-2 col-sm-2 control-label">Member of</label>
+                                            <label for="ad-sec_group" class="col-md-2 col-sm-2 control-label">Member of</label>
                                             <div class="col-md-10 col-sm-10">
-                                                <select id="ad-sec_group" class="form-control" name="ad-sec_group" data-live-search="true" data-size="auto" title="Security groups">
-                                                    @for (int x = 1; x <= 10; x++)
-                                                    {
-                                                        <option value="@x">Option @x:</option>;
-                                                    }
-                                                </select>
-                                                <textarea id="ad-group" class="form-control" name="ad-group" rows="4" cols="60"
-                                                          placeholder="Domain\GroupName"></textarea>
+                                                <input id="ad-sec_group" class="form-control" name="ad-sec_group" data-live-search="true" data-size="auto" title="Security groups" />
+                                                <ul style="height:100px;overflow-y:scroll" id="ad-group" class="form-control" name="ad-group"></ul>
                                             </div>
                                         </div>
 

@@ -18,17 +18,6 @@ $(document).ready(function () {
 
         GetProjects(l, c, p);
     });
-    //get project list
-    //$("#dd_projects").on('change', function () {
-    //    //var l = $("#dd_locations").val();
-    //    //var c = $("#dd_clients").val();
-    //    var p = $("#dd_programs").val();
-    //    //var d = $("#dd_departments").val();
-    //    if (p == '' || p === undefined)
-    //        alert('Select a program.');
-    //    else
-    //        GetRoles(l, c, p, d);
-    //});
     //get role list
     $("#dd_departments").on('change', function () {
         var l = $("#dd_locations").val();
@@ -50,32 +39,17 @@ $(document).ready(function () {
         GetProfile(l, c, p, d, r);
     });
 
-    //get locations list
-    //$("#dd_locations").on('change', function () {
-    //    var l = $("#dd_locations").val();
-
-    //    GetClients(l);
-    //}); 
-
-    //get client list
-    //$("#dd_locations").on('change', function () {
-    //    var l = $("#dd_locations").val();
-        
-    //    //GetClients(l);
-    //});
-
+    $("#ad-sec_group").on('change', function () {
+        var opcID = $("#ad-sec_group option:selected").val();
+        var opc = $("#ad-sec_group option:selected").text();
+        var ul = $("#ad-group");
+        var li = $('<li/>').text(opc).on("click", function () { $(this).remove() });
+        if (!$("#ad-group li:contains(" + opc + ")").length)
+            ul.prepend(li);
+        else
+            Prompt('', 'Security group is already added', 1);
+    });
     
-
-    ////get department list
-    //$("#dd_programs").on('change', function () {
-    //    var l = $("#dd_locations").val();
-    //    var c = $("#dd_clients").val();
-    //    var p = $("#dd_programs").val();
-
-
-    //    //GetDepartments(l, c, p);
-    //});
-
     //save profile changes
     $("#b_save").click(function (e) {
         var Permissions = {
@@ -162,13 +136,14 @@ $(document).ready(function () {
 
     function Init() {
         InitSelect();
-        ShowBusy(0);
+        ShowBusy(1);
 
         $('#dd_programs').prop('disabled', 'disabled');
         $('#dd_projects').prop('disabled', 'disabled');
         $('#dd_roles').prop('disabled', 'disabled');
 
         //GetChats();
+        //GetSecutityGroups();
 
         var locations = $("#dd_locations");
 
@@ -234,14 +209,43 @@ $(document).ready(function () {
                 Prompt(jqXHR, exception, 0);
             }
         });
-        
+
+        var minlength = 3;
+
+        $("#ad-sec_group").keyup(function () {
+            var that = this,
+            value = $(this).val();
+
+            if (value.length >= minlength ) {
+                var sec_group = $("#ad-sec_group");
+
+                $.ajax({
+                    type: "GET",
+                    url: "/api/SecurityGroups/" + value,
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        var _select = $('<select class="selectpicker">');
+                        $.each(data, function (index, elem) {
+                            _select.append($('<option></option>').val(elem.SEC_GRP_ID).html(elem.DOMAIN_NAME + '\\' + elem.SEC_GROUP_NAME));
+                        });
+                        sec_group.append(_select.html());
+                        sec_group.selectpicker('refresh');
+                    },
+                    error: function (jqXHR, exception) {
+                        Prompt(jqXHR, exception, 0);
+                    }
+                });
+            }
+        });
+
+
+        ShowBusy(0);
     }
 
     function InitSelect() {
         $("select").selectpicker({
             size: 8
         });
-        $("#selectable-1").selectable();
         //$("#incident-information select").selectpicker();
     }
 
@@ -330,7 +334,7 @@ $(document).ready(function () {
                         _select.append(
                             $('<option></option>').val(elem.ProgramID).html(elem.ProgramName)
                         );
-                    });
+                    });li
                     programs.append(_select.html());
                     programs.selectpicker('refresh');
                 },
@@ -340,7 +344,7 @@ $(document).ready(function () {
             }); 
         }
         else {
-            alert('Select a client');
+            Prompt('', 'Select a client', 0);
         }
     }
 
@@ -393,7 +397,7 @@ $(document).ready(function () {
             });
         }
         else {
-            alert('Select a client');
+            Prompt('', 'Select a program', 0);
         }
     }
 
@@ -473,7 +477,7 @@ $(document).ready(function () {
             });
         }
         else{
-            alert('Select a department');
+            Prompt('', 'Select a department', 0);
         }
     }
 
@@ -488,6 +492,28 @@ $(document).ready(function () {
             contentType: 'application/json; charset=utf-8',
             success: function (Profiledata) {
                 ProfileGUI(Profiledata);
+            },
+            error: function (jqXHR, exception) {
+                Prompt(jqXHR, exception, 0);
+            }
+        });
+    }
+
+    function GetSecutityGroups() {
+
+        var sec_group = $("#ad-sec_group");
+
+        $.ajax({
+            type: "GET",
+            url: "/api/SecurityGroups/",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                var _select = $('<select class="selectpicker">');
+                $.each(data, function (index, elem) {
+                    _select.append($('<option></option>').val(elem.SEC_GRP_ID).html(elem.DOMAIN_NAME + '\\' + elem.SEC_GROUP_NAME));
+                });
+                sec_group.append(_select.html());
+                sec_group.selectpicker('refresh');
             },
             error: function (jqXHR, exception) {
                 Prompt(jqXHR, exception, 0);
@@ -729,57 +755,40 @@ $(document).ready(function () {
 
         if (status == 1) {
             settings.hide();
+            panel.css("display", "none");
             panel.css("background-color", "white");
             gears.show();
 
         } else {
             settings.show();
             panel.css("background-color", "lightgray");
+            panel.css("display", "block");
             gears.hide();
         }
     }
 
-    function alert(message) {
-        var msgboxFilter = $("#msgFilters");
-        var a = "";
-        var z = "</div>";
-
-        //type = type || 1;
-
-        if (type == 1) {
-            a = '<div class="alert alert-success" role="alert">';
-        } else {
-            a = '<div class="alert alert-danger" role="alert">';
-        }
-
-        msgboxFilter.html(a + message + z).slideDown();
-        window.scrollTo(0, 0);
-
-        setTimeout(function () {
-            msgboxFilter.slideUp();
-
-        }, 10000);
-    }
-
     function Prompt(jqXHR, exception, type) {
+        exception.toUpperCase();
         if (jqXHR.status === 0) {
             exception += '\nNot connect.\n Verify Network.';
         } else if (jqXHR.status == 404) {
             //msg += '\nRequested page not found. [404]';
-            exception += '\nNo data found. [404]';
+            exception += '. \nNo data found. [404]';
         } else if (jqXHR.status == 500) {
-            exception += '\nInternal Server Error [500].';
+            exception += '. \nInternal Server Error [500].';
         } else if (exception === 'parsererror') {
-            exception += '\nRequested JSON parse failed.';
+            exception += '. \nRequested JSON parse failed.';
         } else if (exception === 'timeout') {
-            exception += '\nTime out error.';
+            exception += '. \nTime out error.';
         } else if (exception === 'abort') {
-            exception += '\nAjax request aborted.';
+            exception += '. \nAjax request aborted.';
         }else if(jqXHR == 200){
-            exception += '\nData saved.';
+            exception += '. \nData saved.';
+        } else if (jqXHR === '' || jqXHR === undefined) {
+            exception += '';
         } else {
-            exception += '\nUncaught Error.\n' + jqXHR.responseText;
-        } 
+            exception += '. \nUncaught Error.\n' + jqXHR.responseText;
+        }
 
 
         //type = type || 1;

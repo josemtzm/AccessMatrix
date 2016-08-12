@@ -95,28 +95,8 @@ html, body {
 	text-align: center;
 }
 
-
-/*
-#buttons{
-	position: absolute;
-	bottom: 10px;
-	display: none;
+ul
+{
+    list-style-type: none;
 }
-
-#b_save{
-	margin-right: 8px;
-}
-
-#b_cancel{
-	display: none;
-}
-
-
-
-
-
-input[type=checkbox] {
-	transform: scale(1.5);
-	-webkit-transform: scale(1.5);
-}*/
 

@@ -31,6 +31,7 @@ namespace AccessMatrixWebAPI
                       "~/Content/bootstrap-select.css",
                       "~/Content/shared.css",
                       "~/Content/style.css",
+                      "~/Content/css/select2.css",
                       "~/Content/site.css"));
 
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
@@ -50,6 +51,9 @@ namespace AccessMatrixWebAPI
 
             bundles.Add(new ScriptBundle("~/bundles/custom").Include(
                    "~/Scripts/main.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/select2").Include(
+                   "~/Scripts/select2.js"));
         }
     }
 }

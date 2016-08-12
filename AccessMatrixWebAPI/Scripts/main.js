@@ -210,36 +210,125 @@ $(document).ready(function () {
             }
         });
 
-        var minlength = 3;
+        //var minlength = 3;
 
-        $("#ad-sec_group").keyup(function () {
-            var that = this,
-            value = $(this).val();
+        //$("#ad-sec_group").keyup(function () {
+        //    var that = this,
+        //    value = $(this).val();
 
-            if (value.length >= minlength ) {
-                var sec_group = $("#ad-sec_group");
+        //    if (value.length >= minlength ) {
+        //        var sec_group = $("#ad-sec_group");
 
-                $.ajax({
-                    type: "GET",
-                    url: "/api/SecurityGroups/" + value,
-                    contentType: 'application/json; charset=utf-8',
-                    success: function (data) {
-                        var _select = $('<select class="selectpicker">');
-                        $.each(data, function (index, elem) {
-                            _select.append($('<option></option>').val(elem.SEC_GRP_ID).html(elem.DOMAIN_NAME + '\\' + elem.SEC_GROUP_NAME));
-                        });
-                        sec_group.append(_select.html());
-                        sec_group.selectpicker('refresh');
-                    },
-                    error: function (jqXHR, exception) {
-                        Prompt(jqXHR, exception, 0);
-                    }
-                });
-            }
+        //        $.ajax({
+        //            type: "GET",
+        //            url: "/api/SecurityGroups/" + value,
+        //            contentType: 'application/json; charset=utf-8',
+        //            success: function (data) {
+        //                var _select = $('<select class="selectpicker">');
+        //                $.each(data, function (index, elem) {
+        //                    _select.append($('<option></option>').val(elem.SEC_GRP_ID).html(elem.DOMAIN_NAME + '\\' + elem.SEC_GROUP_NAME));
+        //                });
+        //                sec_group.append(_select.html());
+        //                sec_group.selectpicker('refresh');
+        //            },
+        //            error: function (jqXHR, exception) {
+        //                Prompt(jqXHR, exception, 0);
+        //            }
+        //        });
+        //    }
+        //});
+        //var attendeeUrl = "/api/SecurityGroups/";
+        //var pageSize = 20;
+
+        //$('#ad-sec_group').select2(
+        //{
+        //    placeholder: 'Domain\Group Name',
+        //    //Does the user have to enter any data before sending the ajax request
+        //    minimumInputLength: 3,
+        //    allowClear: true,
+        //    ajax: {
+        //        //How long the user has to pause their typing before sending the next request
+        //        quietMillis: 150,
+        //        //The url of the json service
+        //        url: attendeeUrl,
+        //        dataType: 'jsonp',
+        //        //Our search term and what page we are on
+        //        data: function (term, page) {
+        //            return {
+        //                pageSize: pageSize,
+        //                pageNum: page,
+        //                searchTerm: term
+        //            };
+        //        },
+        //        results: function (data, page) {
+        //            //Used to determine whether or not there are more results available,
+        //            //and if requests for more data should be sent in the infinite scrolling
+        //            var more = (page * pageSize) < data.Total;
+        //            return { results: data.Results, more: more };
+        //        }
+        //    }
+        //});
+
+        $(".js-data-example-ajax").select2({
+            ajax: {
+                url: "/api/SecurityGroups/",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page
+                    };
+                },
+                processResults: function (data, params) {
+                    // parse the results into the format expected by Select2
+                    // since we are using custom formatting functions we do not need to
+                    // alter the remote JSON data, except to indicate that infinite
+                    // scrolling can be used
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data,
+                        pagination: {
+                            more: (params.page * 30) < data.length
+                        }
+                    };
+                },
+                cache: true
+            },
+            escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+            minimumInputLength: 1,
+            //templateResult: formatRepo, // omitted for brevity, see the source of this page
+            templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
         });
 
-
         ShowBusy(0);
+    }
+
+    //function formatRepo(repo) {
+    //    if (repo.loading) return repo.text;
+
+    //    var markup = "<div class='select2-result-repository clearfix'>" +
+    //      "<div class='select2-result-repository__avatar'><img src='" + repo.owner.avatar_url + "' /></div>" +
+    //      "<div class='select2-result-repository__meta'>" +
+    //        "<div class='select2-result-repository__title'>" + repo.full_name + "</div>";
+
+    //    if (repo.description) {
+    //        markup += "<div class='select2-result-repository__description'>" + repo.description + "</div>";
+    //    }
+
+    //    markup += "<div class='select2-result-repository__statistics'>" +
+    //      "<div class='select2-result-repository__forks'><i class='fa fa-flash'></i> " + repo.forks_count + " Forks</div>" +
+    //      "<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i> " + repo.stargazers_count + " Stars</div>" +
+    //      "<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i> " + repo.watchers_count + " Watchers</div>" +
+    //    "</div>" +
+    //    "</div></div>";
+
+    //    return markup;
+    //}
+
+    function formatRepoSelection(elem) {
+        return elem.DOMAIN_NAME || elem.SEC_GROUP_NAME;
     }
 
     function InitSelect() {

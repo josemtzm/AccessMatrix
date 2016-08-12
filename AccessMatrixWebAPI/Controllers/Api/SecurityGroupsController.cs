@@ -96,6 +96,27 @@ namespace AccessMatrixWebAPI.Controllers.Api
             return Ok(sec);
         }
 
+        //[Authorize]
+        //[HttpGet]
+        //[Route("api/SecurityGroups/")]
+        //public IHttpActionResult Get(string searchTerm, int pageSize, int pageNum)
+        //{
+        //    //Get the paged results and the total count of the results for this query. 
+            
+        //    List<SecurityGroups> attendees = db.
+        //    int attendeeCount = ar.GetAttendeesCount(searchTerm, pageSize, pageNum);
+
+        //    //Translate the attendees into a format the select2 dropdown expects
+        //    Select2PagedResult pagedAttendees = AttendeesToSelect2Format(attendees, attendeeCount);
+
+        //    //Return the data as a jsonp result
+        //    return new JsonpResult
+        //    {
+        //        Data = pagedAttendees,
+        //        JsonRequestBehavior = JsonRequestBehavior.AllowGet
+        //    };
+        //}
+
         // POST: api/SecurityGroups
         public void Post([FromBody]string value)
         {

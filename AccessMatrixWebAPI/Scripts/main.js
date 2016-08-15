@@ -650,28 +650,28 @@ $(document).ready(function () {
         });
     }
     function GetChats(ChatID) {
-        //var _divChat = $("#others-chat");
+        var _divChat = $("#others-chat");
 
-        //$.ajax({
-        //    type: "GET",
-        //    url: "/api/Chats/",
-        //    contentType: 'application/json; charset=utf-8',
-        //    success: function (data) {
-        //        $.each(data, function (index, elem) {
-        //            if (elem.ChatID == ChatID)
-        //                _divChat.append(
-        //                $('<input selected id="' + elem.ChatName + '" type="radio" ' + elem.ChatID + '></input>'));
-        //            else
-        //                _divChat.append(
-        //                $('<input id="' + elem.ChatName + '" type="radio" ' + elem.ChatID + '></input>'));
-        //        });
-        //        _divChat.append(_divChat.html());
-        //        _divChat.selectpicker('refresh');
-        //    },
-        //    error: function (jqXHR, exception) {
-        //        Prompt(jqXHR, exception, 0);
-        //    }
-        //});
+        $.ajax({
+            type: "GET",
+            url: "/api/Chats/",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                $.each(data, function (index, elem) {
+                    if (elem.ChatID == ChatID)
+                        _divChat.append(
+                        $('<div><input selected id="' + elem.ChatID + '" type="radio" name="others-chat-r"> ' + elem.ChatName + '</input></div>'));
+                    else
+                        _divChat.append(
+                        $('<div><input id="' + elem.ChatID + '" type="radio" name="others-chat-r"> ' + elem.ChatName + '</input></div>'));
+                });
+                //_divChat.append(_divChat.html());
+                //_divChat.selectpicker('refresh');
+            },
+            error: function (jqXHR, exception) {
+                Prompt(jqXHR, exception, 0);
+            }
+        });
     }
 
     //function GetChats() {

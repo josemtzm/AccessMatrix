@@ -15,107 +15,82 @@ namespace AccessMatrixWebAPI.Controllers.Api
         // GET: api/SecurityGroups
         private USVIA db = new USVIA();
         // GET: api/SecurityGroups
-        [Authorize]
-        [HttpGet]
-        [Route("api/SecurityGroups")]
-        public IQueryable<SecurityGroups> Get()
-        {
-            var sec = from sec_grps in db.SEC_GRPS
-                      orderby sec_grps.NAME
-                      join domains in db.DOMAINS on sec_grps.DOMAIN_ID equals domains.DOMAIN_ID
-                      select new SecurityGroups()
-                      {
-                          SEC_GRP_ID = sec_grps.SEC_GRP_ID,
-                          DOMAIN_ID = sec_grps.DOMAIN_ID,
-                          SEC_GROUP_NAME = sec_grps.NAME,
-                          SEC_GROUP_DESC = sec_grps.DESCRIPTION,
-                          SEC_GROUP_DN = sec_grps.DN,
-                          DOMAIN_NAME = domains.NAME,
-                          DOMAIN_DESC = domains.DESCRIPTION,
-                          DOMAIN_DN = domains.DN
-                      };
-
-            return sec;
-        }
-
-        // GET: api/SecurityGroups/5
-        [Authorize]
-        [HttpGet]
-        [Route("api/SecurityGroups/{id}")]
-        public IHttpActionResult Get(int id)
-        {
-            var sec = from sec_grps in db.SEC_GRPS
-                      where sec_grps.SEC_GRP_ID == id
-                      orderby sec_grps.NAME
-                       join domains in db.DOMAINS on sec_grps.DOMAIN_ID equals domains.DOMAIN_ID
-                       select new
-                       {
-                           sec_grps.SEC_GRP_ID,
-                           sec_grps.DOMAIN_ID,
-                           SEC_GROUP_NAME = sec_grps.NAME,
-                           SEC_GROUP_DESC = sec_grps.DESCRIPTION,
-                           SEC_GROUP_DN = sec_grps.DN,
-                           DOMAIN_NAME = domains.NAME,
-                           DOMAIN_DESC = domains.DESCRIPTION,
-                           DOMAIN_DN = domains.DN
-                       };
-            if (sec == null || sec.Count() == 0)
-            {
-                return NotFound();
-            }
-
-            return Ok(sec);
-        }
-
-        // GET: api/SecurityGroups/5
-        [Authorize]
-        [HttpGet]
-        [Route("api/SecurityGroups/{keyword}")]
-        public IHttpActionResult Get(string keyword)
-        {
-            var sec = from sec_grps in db.SEC_GRPS
-                      orderby sec_grps.NAME
-                      join domains in db.DOMAINS on sec_grps.DOMAIN_ID equals domains.DOMAIN_ID
-                      where sec_grps.NAME.Contains(keyword) || domains.NAME.Contains(keyword)
-                      select new
-                      {
-                          sec_grps.SEC_GRP_ID,
-                          sec_grps.DOMAIN_ID,
-                          SEC_GROUP_NAME = sec_grps.NAME,
-                          SEC_GROUP_DESC = sec_grps.DESCRIPTION,
-                          SEC_GROUP_DN = sec_grps.DN,
-                          DOMAIN_NAME = domains.NAME,
-                          DOMAIN_DESC = domains.DESCRIPTION,
-                          DOMAIN_DN = domains.DN
-                      };
-            if (sec == null || sec.Count() == 0)
-            {
-                return NotFound();
-            }
-
-            return Ok(sec);
-        }
-
         //[Authorize]
         //[HttpGet]
-        //[Route("api/SecurityGroups/")]
-        //public IHttpActionResult Get(string searchTerm, int pageSize, int pageNum)
+        //[Route("api/SecurityGroups")]
+        //public IQueryable<SecurityGroups> Get()
         //{
-        //    //Get the paged results and the total count of the results for this query. 
-            
-        //    List<SecurityGroups> attendees = db.
-        //    int attendeeCount = ar.GetAttendeesCount(searchTerm, pageSize, pageNum);
+        //    var sec = from sec_grps in db.SEC_GRPS
+        //              orderby sec_grps.NAME
+        //              join domains in db.DOMAINS on sec_grps.DOMAIN_ID equals domains.DOMAIN_ID
+        //              where sec_grps.ACTV_FLG == "Y" && domains.ACTV_FLG == "Y"
+        //              select new SecurityGroups()
+        //              {
+        //                  SEC_GRP_ID = sec_grps.SEC_GRP_ID,
+        //                  DOMAIN_ID = sec_grps.DOMAIN_ID,
+        //                  SEC_GROUP_NAME = sec_grps.NAME,
+        //                  SEC_GROUP_DESC = sec_grps.DESCRIPTION,
+        //                  SEC_GROUP_DN = sec_grps.DN,
+        //                  DOMAIN_NAME = domains.NAME,
+        //                  DOMAIN_DESC = domains.DESCRIPTION,
+        //                  DOMAIN_DN = domains.DN
+        //              };
 
-        //    //Translate the attendees into a format the select2 dropdown expects
-        //    Select2PagedResult pagedAttendees = AttendeesToSelect2Format(attendees, attendeeCount);
-
-        //    //Return the data as a jsonp result
-        //    return new JsonpResult
-        //    {
-        //        Data = pagedAttendees,
-        //        JsonRequestBehavior = JsonRequestBehavior.AllowGet
-        //    };
+        //    return sec;
         //}
+
+        //// GET: api/SecurityGroups/5
+        //[Authorize]
+        //[HttpGet]
+        //[Route("api/SecurityGroups/{id}")]
+        //public IHttpActionResult Get(int id)
+        //{
+        //    var sec = from sec_grps in db.SEC_GRPS
+        //              orderby sec_grps.NAME
+        //               join domains in db.DOMAINS on sec_grps.DOMAIN_ID equals domains.DOMAIN_ID
+        //               where sec_grps.ACTV_FLG == "Y" && domains.ACTV_FLG == "Y" && sec_grps.SEC_GRP_ID == id
+        //              select new
+        //               {
+        //                   sec_grps.SEC_GRP_ID,
+        //                   sec_grps.DOMAIN_ID,
+        //                   SEC_GROUP_NAME = sec_grps.NAME,
+        //                   SEC_GROUP_DESC = sec_grps.DESCRIPTION,
+        //                   SEC_GROUP_DN = sec_grps.DN,
+        //                   DOMAIN_NAME = domains.NAME,
+        //                   DOMAIN_DESC = domains.DESCRIPTION,
+        //                   DOMAIN_DN = domains.DN
+        //               };
+        //    if (sec == null || sec.Count() == 0)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return Ok(sec);
+        //}
+
+        // GET: api/SecurityGroups/5
+        [Authorize]
+        [HttpGet]
+        //[Route("api/SecurityGroups/{term}")]
+        public IQueryable<SecurityGroups> Get(string term)
+        {
+            return(
+                from sec_grps in db.SEC_GRPS
+                orderby sec_grps.NAME
+                join domains in db.DOMAINS on sec_grps.DOMAIN_ID equals domains.DOMAIN_ID
+                where sec_grps.ACTV_FLG == "Y" && domains.ACTV_FLG == "Y" && (sec_grps.NAME.Contains(term) || domains.NAME.Contains(term))
+                select new SecurityGroups()
+                {
+                    SEC_GRP_ID = sec_grps.SEC_GRP_ID,
+                    DOMAIN_ID = sec_grps.DOMAIN_ID,
+                    SEC_GROUP_NAME = sec_grps.NAME,
+                    SEC_GROUP_DESC = sec_grps.DESCRIPTION,
+                    SEC_GROUP_DN = sec_grps.DN,
+                    DOMAIN_NAME = domains.NAME,
+                    DOMAIN_DESC = domains.DESCRIPTION,
+                    DOMAIN_DN = domains.DN
+                });
+        }
 
         // POST: api/SecurityGroups
         public void Post([FromBody]string value)

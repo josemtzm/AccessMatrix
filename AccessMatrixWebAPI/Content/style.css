@@ -100,3 +100,7 @@ ul
     list-style-type: none;
 }
 
+.capitalize {
+  text-transform: capitalize;
+}
+

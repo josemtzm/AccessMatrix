@@ -39,12 +39,16 @@ $(document).ready(function () {
         GetProfile(l, c, p, d, r);
     });
 
-    $("#ad-sec_group").on('change', function () {
-        var opcID = $("#ad-sec_group option:selected").val();
-        var opc = $("#ad-sec_group option:selected").text();
+    $('.sec_group').on("select2:select", function (data) {
+        var itemFound = false;
         var ul = $("#ad-group");
-        var li = $('<li/>').text(opc).on("click", function () { $(this).remove() });
-        if (!$("#ad-group li:contains(" + opc + ")").length)
+        var li = $('<li/>').text(data.params.data.text).val(data.params.data.SEC_GRP_ID).on("click", function () { $(this).remove() });
+        ul.each(function () {
+            if ($(this).text() === data.params.data.text)
+                itemFound = true;
+        });
+
+        if (!itemFound)
             ul.prepend(li);
         else
             Prompt('', 'Security group is already added', 1);
@@ -109,8 +113,6 @@ $(document).ready(function () {
                     $("#dd_roles").val());
     });
 
-    
-
     function ClearUI() {
         $("#profile-id").val("");
         $("#profile-desc").val("");
@@ -142,7 +144,7 @@ $(document).ready(function () {
         $('#dd_projects').prop('disabled', 'disabled');
         $('#dd_roles').prop('disabled', 'disabled');
 
-        //GetChats();
+        GetChats();
         //GetSecutityGroups();
 
         var locations = $("#dd_locations");
@@ -210,216 +212,16 @@ $(document).ready(function () {
             }
         });
 
-        //var minlength = 3;
-
-        //$("#ad-sec_group").keyup(function () {
-        //    var that = this,
-        //    value = $(this).val();
-
-        //    if (value.length >= minlength ) {
-        //        var sec_group = $("#ad-sec_group");
-
-        //        $.ajax({
-        //            type: "GET",
-        //            url: "/api/SecurityGroups/" + value,
-        //            contentType: 'application/json; charset=utf-8',
-        //            success: function (data) {
-        //                var _select = $('<select class="selectpicker">');
-        //                $.each(data, function (index, elem) {
-        //                    _select.append($('<option></option>').val(elem.SEC_GRP_ID).html(elem.DOMAIN_NAME + '\\' + elem.SEC_GROUP_NAME));
-        //                });
-        //                sec_group.append(_select.html());
-        //                sec_group.selectpicker('refresh');
-        //            },
-        //            error: function (jqXHR, exception) {
-        //                Prompt(jqXHR, exception, 0);
-        //            }
-        //        });
-        //    }
-        //});
-        //var attendeeUrl = "/api/SecurityGroups/";
-        //var pageSize = 20;
-
-        //$('#ad-sec_group').select2(
-        //{
-        //    placeholder: 'Domain\Group Name',
-        //    //Does the user have to enter any data before sending the ajax request
-        //    minimumInputLength: 3,
-        //    allowClear: true,
-        //    ajax: {
-        //        //How long the user has to pause their typing before sending the next request
-        //        quietMillis: 150,
-        //        //The url of the json service
-        //        url: attendeeUrl,
-        //        dataType: 'jsonp',
-        //        //Our search term and what page we are on
-        //        data: function (term, page) {
-        //            return {
-        //                pageSize: pageSize,
-        //                pageNum: page,
-        //                searchTerm: term
-        //            };
-        //        },
-        //        results: function (data, page) {
-        //            //Used to determine whether or not there are more results available,
-        //            //and if requests for more data should be sent in the infinite scrolling
-        //            var more = (page * pageSize) < data.Total;
-        //            return { results: data.Results, more: more };
-        //        }
-        //    }
-        //});
-
-        //$(".js-data-example-ajax").select2({
-        //    placeholder: "Search for a domain",
-        //    minimumInputLength: 4,
-        //    ajax: {
-        //        url: "/api/SecurityGroups/",
-        //        dataType: 'json',
-        //        //delay: 250,
-        //        data: function (params) {
-        //            return {
-        //                q: params.term, // search term
-        //                page: params.page
-        //            };
-        //        },
-        //        processResults: function (data, params) {
-        //            // parse the results into the format expected by Select2
-        //            // since we are using custom formatting functions we do not need to
-        //            // alter the remote JSON data, except to indicate that infinite
-        //            // scrolling can be used
-        //            params.page = params.page || 1;
-
-        //            return {
-        //                results: data,
-        //                pagination: {
-        //                    more: (params.page * 30) < data.length
-        //                }
-        //            };
-        //        }
-        //        //cache: true
-        //    },
-        //    //escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-        //    //minimumInputLength: 1,
-        //    //templateResult: formatRepo, // omitted for brevity, see the source of this page
-        //    //templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
-        //});
-
-        //$("#ad-sec_group").select2({
-        //    placeholder: "Search for a domain",
-        //    minimumInputLength: 1,
-        //    ajax: {
-        //        url: "/api/SecurityGroups/",
-        //        dataType: 'json',
-        //        data: function (term, page) {
-        //            return {};
-        //        },
-        //        results: function (data, page) {
-        //            return { results: data };
-        //        }
-        //    }
-        //});
-
-        //$.ajax({
-        //    type: "GET",
-        //    url: "/api/SecurityGroups/",
-        //    contentType: 'application/json; charset=utf-8',
-        //    success: function (data) {
-        //        var dummyData = data;
-        //         set initial value(s)
-        //        $('#ad-sec_group').val([
-        //          dummyData[75].text, dummyData[1897].text
-        //        ]);
-
-        //         init select 2
-        //        $('#ad-sec_group').select2({
-        //            data: dummyData,
-        //             init selected from elements value
-        //            initSelection: function (element, callback) {
-        //                var initialData = [];
-        //                $(element.val().split(",")).each(function () {
-        //                    initialData.push({
-        //                        id: this,
-        //                        text: this
-        //                    });
-        //                });
-        //                callback(initialData);
-        //            },
-
-        //             NOT NEEDED: These are just css for the demo data
-        //            dropdownCssClass: 'capitalize',
-        //            containerCssClass: 'capitalize',
-
-        //             configure as multiple select
-        //            multiple: true,
-
-        //             NOT NEEDED: text for loading more results
-        //            formatLoadMore: 'Loading more...',
-
-        //             query with pagination
-        //            query: function (q) {
-        //                var pageSize, results;
-        //                pageSize = 20; // or whatever pagesize
-        //                results = [];
-        //                if (q.term && q.term !== "") {
-        //                     HEADS UP; for the _.filter function i use underscore (actually lo-dash) here
-        //                    results = _.filter(this.data, function (e) {
-        //                        return (e.text.toUpperCase().indexOf(q.term.toUpperCase()) >= 0);
-        //                        return (e.text.indexOf(q.term) >= 0);
-        //                    });
-        //                } else if (q.term === "") {
-        //                    results = this.data;
-        //                }
-        //                q.callback({
-        //                    results: results.slice((q.page - 1) * pageSize, q.page * pageSize),
-        //                    more: results.length >= q.page * pageSize
-        //                });
-        //            }
-        //        });
-        //    },
-        //    error: function (jqXHR, exception) {
-        //        Prompt(jqXHR, exception, 0);
-        //    }
-        //});
-        
-        //}); 
-        //var pageSize = 20;
-
-        //$(".js-data-example-ajax").select2({
-        //    placeholder: "Search for a domain",
-        //    minimumInputLength: 4,
-        //    allowClear: true,
-        //    ajax: {
-        //        //How long the user has to pause their typing before sending the next request
-        //        quietMillis: 150,
-        //        url: "/api/SecurityGroups/",
-        //        dataType: 'json',
-        //        //delay: 250,
-        //        data: function (term, page) {
-        //            return {
-        //                pageSize: pageSize,
-        //                pageNum: page,
-        //                searchTerm: term
-        //            };
-        //        },
-        //        results: function (data, page) {
-        //            //Used to determine whether or not there are more results available,
-        //            //and if requests for more data should be sent in the infinite scrolling
-        //            page = page || 1;
-        //            var more = (page * pageSize) < data.Total;
-        //            return { results: data.Results, more: more };
-        //        }
-        //        //cache: true
-        //    },
-            //escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-            //minimumInputLength: 1,
-            //templateResult: formatRepo, // omitted for brevity, see the source of this page
-            //templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
-        //});
-        $(".js-data-example-ajax").select2({
+        $(".sec_group").select2({
+            placeholder: "Domain\\Group Name",
+            minimumInputLength: 1,
+            multiple: true,
+            quietMillis: 100,
             ajax: {
                 url: "/api/SecurityGroups/",
                 dataType: 'json',
-                delay: 250,
+                type: 'GET',
+                //delay: 250,
                 data: function (params) {
                     return {
                         term: params.term, // search term
@@ -433,48 +235,42 @@ $(document).ready(function () {
                     // scrolling can be used
                     params.page = params.page || 1;
 
+                    var select2Data = $.map(data, function (obj) {
+                        obj.id = obj.SEC_GRP_ID;
+                        obj.text = obj.DOMAIN_NAME + '\\' + obj.SEC_GROUP_NAME
+
+                        return obj;
+                    });
+
                     return {
-                        results: data,
+                        results: select2Data,
                         pagination: {
-                            more: (params.page * 30) < data.total_count
+                            more: (params.page * 10) < data.length
                         }
                     };
                 },
                 cache: true
             },
-            //escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-            minimumInputLength: 4,
-            templateResult: formatRepo, // omitted for brevity, see the source of this page
-            templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
+            //templateResult: formatRepo, 
+            templateSelection: formatRepoSelection
         });
 
         ShowBusy(0);
     }
 
-    //function GetSecGroups() {
-    //    $.ajax({
-    //        type: "GET",
-    //        url: "/api/SecurityGroups/",
-    //        contentType: 'application/json; charset=utf-8',
-    //        success: function (data) {
-    //            return data;
-    //        },
-    //        error: function (jqXHR, exception) {
-    //            Prompt(jqXHR, exception, 0);
-    //        }
-    //    });
+    //function formatRepo(repo) {
+    //    if (repo.loading) return repo.text;
+
+    //    var markup = repo.DOMAIN_NAME + '\\' + repo.SEC_GROUP_NAME;
+
+    //    //var markup = "<div class='select2-result-repository clearfix'>" +
+    //    //    repo.DOMAIN_NAME + '\\' + repo.SEC_GROUP_NAME + "</div>";
+
+    //    return markup;
     //}
 
-    function formatRepo(repo) {
-        if (repo.loading) return repo.text;
-
-        var markup = repo.DOMAIN_NAME + '\\' + repo.SEC_GROUP_NAME;
-
-        return markup;
-    }
-
     function formatRepoSelection(repo) {
-        return repo.DOMAIN_NAME;// || elem.SEC_GROUP_NAME;
+        return repo.DOMAIN_NAME || repo.SEC_GROUP_NAME;
     }
 
     function InitSelect() {
@@ -727,28 +523,6 @@ $(document).ready(function () {
             contentType: 'application/json; charset=utf-8',
             success: function (Profiledata) {
                 ProfileGUI(Profiledata);
-            },
-            error: function (jqXHR, exception) {
-                Prompt(jqXHR, exception, 0);
-            }
-        });
-    }
-
-    function GetSecutityGroups() {
-
-        var sec_group = $("#ad-sec_group");
-
-        $.ajax({
-            type: "GET",
-            url: "/api/SecurityGroups/",
-            contentType: 'application/json; charset=utf-8',
-            success: function (data) {
-                var _select = $('<select class="selectpicker">');
-                $.each(data, function (index, elem) {
-                    _select.append($('<option></option>').val(elem.SEC_GRP_ID).html(elem.DOMAIN_NAME + '\\' + elem.SEC_GROUP_NAME));
-                });
-                sec_group.append(_select.html());
-                sec_group.selectpicker('refresh');
             },
             error: function (jqXHR, exception) {
                 Prompt(jqXHR, exception, 0);

@@ -23,9 +23,10 @@ $(document).ready(function () {
         var l = $("#dd_locations").val();
         var c = $("#dd_clients").val();
         var p = $("#dd_programs").val();
+        var pj = $("#dd_projects").val();
         var d = $("#dd_departments").val();
 
-        GetRoles(l, c, p, d);
+        GetRoles(l, c, p, pj, d);
     });
 
     //get profile id and load profile
@@ -44,7 +45,7 @@ $(document).ready(function () {
         var ul = $("#ad-group");
         var li = $('<li/>').text(data.params.data.text).val(data.params.data.SEC_GRP_ID).on("click", function () { $(this).remove() });
         ul.each(function () {
-            if ($(this).text() === data.params.data.text)
+            if ($(this).text().indexOf(data.params.data.text) > 0)
                 itemFound = true;
         });
 
@@ -56,15 +57,20 @@ $(document).ready(function () {
     
     //save profile changes
     $("#b_save").click(function (e) {
+        var ProfileID = $("#profile-id").val();
+        
+        if (ProfileID === "" || ProfileID === undefined) 
+            ProfileID = -1;
+
         var Permissions = {
-            profileid: $("#profile-id").val(),
+            profileid: ProfileID,
             description: $("#profile-desc").val(),
             domainid: $("#ad-domain").val(),
             ou: $("#ad-ou").val() == '' ? '' : $("#ad-ou").val(),
             logonscript: $("#ad-loginscript").val(),
             profiledrive: $("#ad-profiledrive").val(),
             profilepath: $("#ad-profilepath").val(),
-            membership: $("#ad-group").val(),
+            membership: $("#ad-group")[0].outerText,
             changepw: $("#ad-changepass").prop('checked'),
             emaildid: $("#email-domain").val(),
             groupsmtp: $("#email-smtp").val(),
@@ -73,34 +79,52 @@ $(document).ready(function () {
             hasactivesync: $("#ad-mobile_activesync").prop('checked'),
             workboothid: $("#others-workbooth").val(),
             vpnid: $("#others-vpn").val(),
-            chatid: $("#others-chat").val(),
+            chatid: $("input[type='radio'][name='others-chat-r']:checked")[0].id,
             hasfederation: $("#others-federation").prop('checked'),
             hasboxaccount: $("#others-box_acct").prop('checked'),
             remarks: $("#remarks").val()
         };
         
-        //var json = JSON.stringify({ value: data });
         e.preventDefault();
         ShowBusy(1);
+        if (ProfileID == -1) {
+            $.ajax({
+                type: "POST",
+                url: "/api/Permissions/",
+                data: Permissions,
+                success: function (data) {
+                    ShowBusy(0);
+                    if (data == 200)
+                        Prompt(200, 'Ok. ', 1);
+                    else
+                        Prompt(data, 'Error. ', 0);
+                },
+                error: function (jqXHR, exception) {
+                    Prompt(jqXHR, exception, 0);
+                    ShowBusy(1);
 
-        $.ajax({
-            type: "PUT",
-            url: "/api/Permissions/" + $("#profile-id").val(),
-            //contentType: "application/x-www-form-urlencode",
-            data: Permissions,
-            success: function (data) {
-                ShowBusy(0);
-                if(data == 200 )
-                    Prompt(200, 'Ok. ', 1);
-                else
-                    Prompt(data, 'Error. ', 0);
-            },
-            error: function (jqXHR, exception) {
-                Prompt(jqXHR, exception, 0);
-                ShowBusy(1);
+                }
+            });
+        }
+        else {
+            $.ajax({
+                type: "PUT",
+                url: "/api/Permissions/" + ProfileID,
+                data: Permissions,
+                success: function (data) {
+                    ShowBusy(0);
+                    if (data == 200)
+                        Prompt(200, 'Ok. ', 1);
+                    else
+                        Prompt(data, 'Error. ', 0);
+                },
+                error: function (jqXHR, exception) {
+                    Prompt(jqXHR, exception, 0);
+                    ShowBusy(1);
 
-            }
-        });
+                }
+            });
+        }
     });
 
     //reload form
@@ -116,21 +140,23 @@ $(document).ready(function () {
     function ClearUI() {
         $("#profile-id").val("");
         $("#profile-desc").val("");
-        $("#ad-domain").val("");
+        $("#ad-domain").empty();
         $("#ad-ou").val("");
         $("#ad-loginscript").val("");
         GetProfileDrive(-1);
         $("#ad-profilepath").val("");
-        $("#ad-group").val("");
+        $("#ad-sec_group").val("");
+        $("#ad-group").empty();
         $("#ad-changepass").prop('checked', false);
-        $("#email-domain").val("");
+        $("#email-domain").empty();
         $("#email-smtp").val("");
         $("#email-email_forwarding").prop('checked', false);
         $("#email-webmail").prop('checked', false);
         $("#ad-mobile_activesync").prop('checked', false);
-        $("#others-workbooth").val("");
-        $("#others-vpn").val("");
-        $("#others-chat").val("");
+        $("#others-workbooth").empty();
+        $("#others-vpn").empty();
+        $("#others-chat").empty();
+        GetChats(-1);
         $("#others-federation").prop('checked', false);
         $("#others-box_acct").prop('checked', false);
         $("#remarks").val("");
@@ -138,13 +164,13 @@ $(document).ready(function () {
 
     function Init() {
         InitSelect();
-        //ShowBusy(1);
+        ShowBusy(1);
 
         $('#dd_programs').prop('disabled', 'disabled');
         $('#dd_projects').prop('disabled', 'disabled');
         $('#dd_roles').prop('disabled', 'disabled');
 
-        GetChats();
+        GetChats(-1);
         //GetSecutityGroups();
 
         var locations = $("#dd_locations");
@@ -212,62 +238,8 @@ $(document).ready(function () {
             }
         });
 
-        $(".sec_group").select2({
-            placeholder: "Domain\\Group Name",
-            minimumInputLength: 1,
-            multiple: true,
-            quietMillis: 100,
-            ajax: {
-                url: "/api/SecurityGroups/",
-                dataType: 'json',
-                type: 'GET',
-                //delay: 250,
-                data: function (params) {
-                    return {
-                        term: params.term, // search term
-                        //page: params.page
-                    };
-                },
-                processResults: function (data, params) {
-                    // parse the results into the format expected by Select2
-                    // since we are using custom formatting functions we do not need to
-                    // alter the remote JSON data, except to indicate that infinite
-                    // scrolling can be used
-                    params.page = params.page || 1;
-
-                    var select2Data = $.map(data, function (obj) {
-                        obj.id = obj.SEC_GRP_ID;
-                        obj.text = obj.DOMAIN_NAME + '\\' + obj.SEC_GROUP_NAME
-
-                        return obj;
-                    });
-
-                    return {
-                        results: select2Data,
-                        pagination: {
-                            more: (params.page * 10) < data.length
-                        }
-                    };
-                },
-                cache: true
-            },
-            //templateResult: formatRepo, 
-            templateSelection: formatRepoSelection
-        });
-
         ShowBusy(0);
     }
-
-    //function formatRepo(repo) {
-    //    if (repo.loading) return repo.text;
-
-    //    var markup = repo.DOMAIN_NAME + '\\' + repo.SEC_GROUP_NAME;
-
-    //    //var markup = "<div class='select2-result-repository clearfix'>" +
-    //    //    repo.DOMAIN_NAME + '\\' + repo.SEC_GROUP_NAME + "</div>";
-
-    //    return markup;
-    //}
 
     function formatRepoSelection(repo) {
         return repo.DOMAIN_NAME || repo.SEC_GROUP_NAME;
@@ -277,14 +249,12 @@ $(document).ready(function () {
         $("select").selectpicker({
             size: 8
         });
-        //$("#incident-information select").selectpicker();
     }
 
     function InitTooltips() {
         $(".tooltips").tooltip({
             'trigger': 'hover focus'
         });
-        //$("#dd_programs-button").tooltip({ items: "span", content: 'This is select' });
     } //inittooltips
 
     function ClearFilters() {
@@ -292,10 +262,6 @@ $(document).ready(function () {
         $("#dd_programs").empty();
         $("#dd_departments").empty();
         $("#dd_roles").empty();
-        //GetClients('');
-        //GetPrograms('', '');
-        //GetDepartments('', '', '');
-        //GetRoles('', '', '', '');
     }
  
     function GetClients(loc) {
@@ -327,7 +293,6 @@ $(document).ready(function () {
     function GetPrograms(loc, cli) {
         var programs = $("#dd_programs");
 
-        //ClearUI();
         programs.empty();
 
         if ((loc !== "" && loc !== undefined) && (cli !== "" && cli !== undefined)) {
@@ -459,16 +424,16 @@ $(document).ready(function () {
         } 
     }
 
-    function GetRoles(loc, cli, prog, dept) {
+    function GetRoles(loc, cli, prog, proj, dept) {
         var roles = $("#dd_roles");
 
         roles.empty();
 
-        if ((loc !== "" && loc !== undefined) && (cli !== "" && cli !== undefined) && (prog !== "" && prog !== undefined) && (dept !== "" && dept !== undefined)) {
+        if ((loc !== "" && loc !== undefined) && (cli !== "" && cli !== undefined) && (prog !== "" && prog !== undefined) && (proj !== "" && proj !== undefined) && (dept !== "" && dept !== undefined)) {
 
             $.ajax({
                 type: "GET",
-                url: "/api/Roles/" + loc + "/" + cli + "/" + prog + "/" + dept,
+                url: "/api/Roles/" + loc + "/" + cli + "/" + prog + "/" + proj + "/" + dept,
                 contentType: 'application/json; charset=utf-8',
                 success: function (data) {
                     roles.prop('disabled', false);
@@ -532,7 +497,7 @@ $(document).ready(function () {
 
     function GetDomains(DomainID) {
         var domains = $("#ad-domain");
-
+        domains.empty();
         $.ajax({
             type: "GET",
             url: "/api/Domains/",
@@ -569,6 +534,7 @@ $(document).ready(function () {
 
     function GetEmailDomains(EmailDomainID) {
         var emaildomains = $("#email-domain");
+        emaildomains.empty();
 
         $.ajax({
             type: "GET",
@@ -597,6 +563,7 @@ $(document).ready(function () {
 
     function GetWorkbooths(WorkboothID) {
         var workbooths = $("#others-workbooth");
+        workbooths.empty();
 
         $.ajax({
             type: "GET",
@@ -624,6 +591,7 @@ $(document).ready(function () {
     }
     function GetVPNs(VpnID) {
         var vpns = $("#others-vp");
+        vpns.empty();
 
         $.ajax({
             type: "GET",
@@ -651,7 +619,7 @@ $(document).ready(function () {
     }
     function GetChats(ChatID) {
         var _divChat = $("#others-chat");
-
+        _divChat.empty();
         $.ajax({
             type: "GET",
             url: "/api/Chats/",
@@ -660,13 +628,11 @@ $(document).ready(function () {
                 $.each(data, function (index, elem) {
                     if (elem.ChatID == ChatID)
                         _divChat.append(
-                        $('<div><input selected id="' + elem.ChatID + '" type="radio" name="others-chat-r"> ' + elem.ChatName + '</input></div>'));
+                        $('<div><input selected id="' + elem.ChatID + '" type="radio" name="others-chat-r" checked="true"> ' + elem.ChatName + '</input></div>'));
                     else
                         _divChat.append(
                         $('<div><input id="' + elem.ChatID + '" type="radio" name="others-chat-r"> ' + elem.ChatName + '</input></div>'));
                 });
-                //_divChat.append(_divChat.html());
-                //_divChat.selectpicker('refresh');
             },
             error: function (jqXHR, exception) {
                 Prompt(jqXHR, exception, 0);
@@ -674,25 +640,66 @@ $(document).ready(function () {
         });
     }
 
-    //function GetChats() {
-    //    var _divChat = $("#others-chat");
+    function GetSecGroups(secGroups) {
+        $(".sec_group").select2({
+            placeholder: "Domain\\Group Name",
+            minimumInputLength: 1,
+            multiple: true,
+            quietMillis: 100,
+            ajax: {
+                url: "/api/SecurityGroups/",
+                dataType: 'json',
+                type: 'GET',
+                //delay: 250,
+                data: function (params) {
+                    return {
+                        term: params.term, // search term
+                        //page: params.page
+                    };
+                },
+                processResults: function (data, params) {
+                    // parse the results into the format expected by Select2
+                    // since we are using custom formatting functions we do not need to
+                    // alter the remote JSON data, except to indicate that infinite
+                    // scrolling can be used
+                    params.page = params.page || 1;
 
-    //    $.ajax({
-    //        type: "GET",
-    //        url: "/api/Chats/",
-    //        contentType: 'application/json; charset=utf-8',
-    //        success: function (data) {
-    //            $.each(data, function (index, elem) {
-    //                    _divChat.append(
-    //                    $('<input id="' + elem.ChatName + '" type="checkbox" ' + elem.ChatID + '>' + elem.ChatName + '</input>'));
-    //            });
-    //        },
-    //        error: function (jqXHR, exception) {
-    //            Prompt(jqXHR, exception, 0);
-    //        }
-    //    });
-    //}
+                    var select2Data = $.map(data, function (obj) {
+                        obj.id = obj.SEC_GRP_ID;
+                        obj.text = obj.DOMAIN_NAME + '\\' + obj.SEC_GROUP_NAME
 
+                        return obj;
+                    });
+
+                    return {
+                        results: select2Data,
+                        pagination: {
+                            more: (params.page * 10) < data.length
+                        }
+                    };
+                },
+                cache: true
+            },
+            //templateResult: formatRepo, 
+            templateSelection: formatRepoSelection
+        });
+
+        var listSecGroups = secGroups.val().split("\n");
+        var ul = $("#ad-group");
+
+        $.each(listSecGroups, function (index, value) {
+            var itemFound = false;
+            var li = $('<li/>').text(value).on("click", function () { $(this).remove() });
+
+            ul.each(function () {
+                if ($(this).text() === value)
+                    itemFound = true;
+            });
+
+            if (!itemFound)
+                ul.prepend(li);
+        });
+    }
 
     function ProfileGUI(Profiledata) {
         $("#profile-id").val(Profiledata[0].ProfileID)
@@ -726,7 +733,7 @@ $(document).ready(function () {
                     GetProfileDrive(Permissionsdata[0].ProfileDrive);
                     //$("#ad-profiledrive").val(Permissionsdata[0].ProfileDrive);
                     $("#ad-profilepath").val(Permissionsdata[0].ProfilePath);
-                    $("#ad-group").val(Permissionsdata[0].Membership);
+                    GetSecGroups($("#ad-group").val(Permissionsdata[0].Membership));
                     $("#ad-changepass").prop('checked', Permissionsdata[0].ChangePW);
 
                     // Email
@@ -798,9 +805,6 @@ $(document).ready(function () {
         } else {
             exception += '. \nUncaught Error.\n' + jqXHR.responseText;
         }
-
-
-        //type = type || 1;
 
         var msgbox = $("#msg");
         var a = "";

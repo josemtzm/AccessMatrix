@@ -38,6 +38,9 @@ namespace AccessMatrixWebAPI.Controllers.Api
         }
 
         // POST: api/Permissions
+        [Authorize]
+        [HttpPost]
+        [Route("api/Permissions/")]
         public HttpStatusCode Post(PermissionsViewModel model)
         {
             if (model != null)
@@ -54,7 +57,7 @@ namespace AccessMatrixWebAPI.Controllers.Api
             }
             else
             {
-                return HttpStatusCode.Created;
+                return HttpStatusCode.NotFound;
             }
         }
         //// PUT: api/Permissions/5

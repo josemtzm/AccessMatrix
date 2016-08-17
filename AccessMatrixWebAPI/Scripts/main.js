@@ -141,20 +141,25 @@ $(document).ready(function () {
         $("#profile-id").val("");
         $("#profile-desc").val("");
         $("#ad-domain").empty();
+        GetDomains(-1);
         $("#ad-ou").val("");
         $("#ad-loginscript").val("");
         GetProfileDrive(-1);
         $("#ad-profilepath").val("");
         $("#ad-sec_group").val("");
+        GetSecGroups(-1);
         $("#ad-group").empty();
         $("#ad-changepass").prop('checked', false);
         $("#email-domain").empty();
+        GetEmailDomains(-1);
         $("#email-smtp").val("");
         $("#email-email_forwarding").prop('checked', false);
         $("#email-webmail").prop('checked', false);
         $("#ad-mobile_activesync").prop('checked', false);
         $("#others-workbooth").empty();
+        GetWorkbooths(-1);
         $("#others-vpn").empty();
+        GetVPNs(-1);
         $("#others-chat").empty();
         GetChats(-1);
         $("#others-federation").prop('checked', false);
@@ -641,6 +646,7 @@ $(document).ready(function () {
     }
 
     function GetSecGroups(secGroups) {
+
         $(".sec_group").select2({
             placeholder: "Domain\\Group Name",
             minimumInputLength: 1,
@@ -680,42 +686,47 @@ $(document).ready(function () {
                 },
                 cache: true
             },
-            //templateResult: formatRepo, 
             templateSelection: formatRepoSelection
         });
 
-        var listSecGroups = secGroups.val().split("\n");
-        var ul = $("#ad-group");
+        if (secGroups !== "" && secGroups !== undefined && secGroups !== -1) {
+            var listSecGroups = secGroups.val().split("\n");
+            var ul = $("#ad-group");
 
-        $.each(listSecGroups, function (index, value) {
-            var itemFound = false;
-            var li = $('<li/>').text(value).on("click", function () { $(this).remove() });
+            $.each(listSecGroups, function (index, value) {
+                var itemFound = false;
+                var li = $('<li/>').text(value).on("click", function () { $(this).remove() });
 
-            ul.each(function () {
-                if ($(this).text() === value)
-                    itemFound = true;
+                ul.each(function () {
+                    if ($(this).text() === value)
+                        itemFound = true;
+                });
+
+                if (!itemFound)
+                    ul.prepend(li);
             });
-
-            if (!itemFound)
-                ul.prepend(li);
-        });
+        }
     }
 
     function ProfileGUI(Profiledata) {
+
+        ShowBusy(1);
+
         $("#profile-id").val(Profiledata[0].ProfileID)
         $("#profile-desc").val(Profiledata[0].ProfileID)
 
         GetDomains(-1);
+        GetSecGroups(-1);
         GetEmailDomains(-1);
         GetWorkbooths(-1);
         GetVPNs(-1);
         GetChats(-1);
+        
 
         var p_id = $("#profile-id").val();
-        if (p_id !== "") {
+        if (p_id !== "" && p_id !== undefined) {
             // Buttons
             $("#buttons").show();
-
             $.ajax({
                 type: "GET",
                 url: "/api/Permissions/" + Profiledata[0].ProfileID,
@@ -724,8 +735,6 @@ $(document).ready(function () {
 
                     $("#profile-desc").val(Permissionsdata[0].Description);
 
-                    ShowBusy(0);
-                    
                     // Permissions
                     GetDomains(Permissionsdata[0].DomainID);
                     $("#ad-ou").val(Permissionsdata[0].OU);
@@ -752,16 +761,15 @@ $(document).ready(function () {
 
                     // Remarks
                     $("#remarks").val(Permissionsdata[0].Remarks);
-
                 },
                 error: function (jqXHR, exception) {
                     Prompt(jqXHR, exception, 0);
                 }
-
             });
         } else {
             $("#buttons").hide();
         }
+        ShowBusy(0);
     }
 
     function ShowBusy(status) {
@@ -799,7 +807,7 @@ $(document).ready(function () {
         } else if (exception === 'abort') {
             exception += '. \nAjax request aborted.';
         }else if(jqXHR == 200){
-            exception += '. \nData saved.';
+            exception += '\nData saved.';
         } else if (jqXHR === '' || jqXHR === undefined) {
             exception += '';
         } else {

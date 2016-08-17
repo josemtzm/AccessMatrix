@@ -486,6 +486,7 @@ $(document).ready(function () {
 
         ShowBusy(1);
         ClearUI();
+        $("#buttons").hide();
 
         $.ajax({
             type: "GET",
@@ -779,14 +780,14 @@ $(document).ready(function () {
 
         if (status == 1) {
             settings.hide();
-            panel.css("display", "none");
-            panel.css("background-color", "white");
+            //panel.css("display", "none");
+            //panel.css("background-color", "white");
             gears.show();
 
         } else {
             settings.show();
-            panel.css("background-color", "lightgray");
-            panel.css("display", "block");
+            //panel.css("background-color", "lightgray");
+            //panel.css("display", "block");
             gears.hide();
         }
     }

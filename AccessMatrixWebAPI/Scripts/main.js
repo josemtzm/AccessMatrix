@@ -34,10 +34,11 @@ $(document).ready(function () {
         var l = $("#dd_locations").val();
         var c = $("#dd_clients").val();
         var p = $("#dd_programs").val();
+        var pj = $("#dd_projects").val();
         var d = $("#dd_departments").val();
         var r = $("#dd_roles").val();
 
-        GetProfile(l, c, p, d, r);
+        GetProfile(l, c, p, pj, d, r);
     });
 
     $('.sec_group').on("select2:select", function (data) {
@@ -132,7 +133,8 @@ $(document).ready(function () {
         ClearUI();
         GetProfile( $("#dd_locations").val(), 
                     $("#dd_clients").val(), 
-                    $("#dd_programs").val(), 
+                    $("#dd_programs").val(),
+                    $("#dd_projects").val(),
                     $("#dd_departments").val(), 
                     $("#dd_roles").val());
     });
@@ -263,9 +265,11 @@ $(document).ready(function () {
     } //inittooltips
 
     function ClearFilters() {
+        $("#dd_locations").empty();
         $("#dd_clients").empty();
-        $("#dd_programs").empty();
         $("#dd_departments").empty();
+        $("#dd_programs").empty();
+        $("#dd_projects").empty();
         $("#dd_roles").empty();
     }
  
@@ -300,30 +304,31 @@ $(document).ready(function () {
 
         programs.empty();
 
-        if ((loc !== "" && loc !== undefined) && (cli !== "" && cli !== undefined)) {
+        //if ((loc !== "" && loc !== undefined) && (cli !== "" && cli !== undefined)) {
 
-            $.ajax({
-                type: "GET",
-                url: "/api/Programs/" + loc + "/" + cli,
-                contentType: 'application/json; charset=utf-8',
-                success: function (data) {
-                    programs.prop('disabled', false);
-                    var _select = $('<select class="selectpicker">');
-                    $.each(data, function (index, elem) {
-                        _select.append(
-                            $('<option></option>').val(elem.ProgramID).html(elem.ProgramName)
-                        );
-                    });
-                    programs.append(_select.html());
-                    programs.selectpicker('refresh');
-                },
-                error: function (jqXHR, exception) {
-                    Prompt(jqXHR, exception, 0);
-                }
-            });
+        //    $.ajax({
+        //        type: "GET",
+        //        url: "/api/Programs/" + loc + "/" + cli,
+        //        contentType: 'application/json; charset=utf-8',
+        //        success: function (data) {
+        //            programs.prop('disabled', false);
+        //            var _select = $('<select class="selectpicker">');
+        //            $.each(data, function (index, elem) {
+        //                _select.append(
+        //                    $('<option></option>').val(elem.ProgramID).html(elem.ProgramName)
+        //                );
+        //            });
+        //            programs.append(_select.html());
+        //            programs.selectpicker('refresh');
+        //        },
+        //        error: function (jqXHR, exception) {
+        //            Prompt(jqXHR, exception, 0);
+        //        }
+        //    });
 
-        }
-        else if (cli !== "" || cli !== undefined) {
+        //}
+        //else
+            if (cli !== "" || cli !== undefined) {
             $.ajax({
                 type: "GET",
                 url: "/api/GetPrograms/" + cli,
@@ -335,7 +340,7 @@ $(document).ready(function () {
                         _select.append(
                             $('<option></option>').val(elem.ProgramID).html(elem.ProgramName)
                         );
-                    });li
+                    });
                     programs.append(_select.html());
                     programs.selectpicker('refresh');
                 },
@@ -354,29 +359,30 @@ $(document).ready(function () {
 
         projects.empty();
 
-        if ((loc !== "" && loc !== undefined) && (cli !== "" && cli !== undefined) && (prog !== "" && prog !== undefined)) {
+        //if ((loc !== "" && loc !== undefined) && (cli !== "" && cli !== undefined) && (prog !== "" && prog !== undefined)) {
 
-            $.ajax({
-                type: "GET",
-                url: "/api/Projects/" + loc + "/" + cli + "/" + prog,
-                contentType: 'application/json; charset=utf-8',
-                success: function (data) {
-                    projects.prop('disabled', false);
-                    var _select = $('<select class="selectpicker">');
-                    $.each(data, function (index, elem) {
-                        _select.append(
-                            $('<option></option>').val(elem.ProjectID).html(elem.ProjectName)
-                        );
-                    });
-                    projects.append(_select.html());
-                    projects.selectpicker('refresh');
-                },
-                error: function (jqXHR, exception) {
-                    Prompt(jqXHR, exception, 0);
-                }
-            });
-        }
-        else if (prog !== "" || prog !== undefined) {
+        //    $.ajax({
+        //        type: "GET",
+        //        url: "/api/Projects/" + loc + "/" + cli + "/" + prog,
+        //        contentType: 'application/json; charset=utf-8',
+        //        success: function (data) {
+        //            projects.prop('disabled', false);
+        //            var _select = $('<select class="selectpicker">');
+        //            $.each(data, function (index, elem) {
+        //                _select.append(
+        //                    $('<option></option>').val(elem.ProjectID).html(elem.ProjectName)
+        //                );
+        //            });
+        //            projects.append(_select.html());
+        //            projects.selectpicker('refresh');
+        //        },
+        //        error: function (jqXHR, exception) {
+        //            Prompt(jqXHR, exception, 0);
+        //        }
+        //    });
+        //}
+        //else
+            if (prog !== "" || prog !== undefined) {
             $.ajax({
                 type: "GET",
                 url: "/api/GetProjects/" + prog,
@@ -434,29 +440,31 @@ $(document).ready(function () {
 
         roles.empty();
 
-        if ((loc !== "" && loc !== undefined) && (cli !== "" && cli !== undefined) && (prog !== "" && prog !== undefined) && (proj !== "" && proj !== undefined) && (dept !== "" && dept !== undefined)) {
+        //if ((loc !== "" && loc !== undefined && loc !== null) && (cli !== "" && cli !== undefined && cli !== null) && (prog !== "" && prog !== undefined && prog !== null) 
+        //    && (proj !== "" && proj !== undefined && proj !== null) && (dept !== "" && dept !== undefined && dept !== null)) {
 
-            $.ajax({
-                type: "GET",
-                url: "/api/Roles/" + loc + "/" + cli + "/" + prog + "/" + proj + "/" + dept,
-                contentType: 'application/json; charset=utf-8',
-                success: function (data) {
-                    roles.prop('disabled', false);
-                    var _select = $('<select class="selectpicker">');
-                    $.each(data, function (index, elem) {
-                        _select.append(
-                            $('<option></option>').val(elem.RoleID).html(elem.RoleName)
-                        );
-                    });
-                    roles.append(_select.html());
-                    roles.selectpicker('refresh');
-                },
-                error: function (jqXHR, exception) {
-                    Prompt(jqXHR, exception, 0);
-                }
-            });
+        //    $.ajax({
+        //        type: "GET",
+        //        url: "/api/Roles/" + loc + "/" + cli + "/" + prog + "/" + proj + "/" + dept,
+        //        contentType: 'application/json; charset=utf-8',
+        //        success: function (data) {
+        //            roles.prop('disabled', false);
+        //            var _select = $('<select class="selectpicker">');
+        //            $.each(data, function (index, elem) {
+        //                _select.append(
+        //                    $('<option></option>').val(elem.RoleID).html(elem.RoleName)
+        //                );
+        //            });
+        //            roles.append(_select.html());
+        //            roles.selectpicker('refresh');
+        //        },
+        //        error: function (jqXHR, exception) {
+        //            Prompt(jqXHR, exception, 0);
+        //        }
+        //    });
 
-        } else if (dept !== '' && dept !== undefined) {
+        //} else
+        if (dept !== '' && dept !== undefined) {
             $.ajax({
                 type: "GET",
                 url: "/api/GetRoles/" + dept,
@@ -477,12 +485,12 @@ $(document).ready(function () {
                 }
             });
         }
-        else{
+        else {
             Prompt('', 'Select a department', 0);
         }
     }
 
-    function GetProfile(loc, cli, prog, dept, role) {
+    function GetProfile(loc, cli, prog, proj, dept, role) {
 
         ShowBusy(1);
         ClearUI();
@@ -490,7 +498,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: "GET",
-            url: "/api/Profiles/" + loc + "/" + cli + "/" + prog + "/" + dept + "/" + role,
+            url: "/api/Profiles/" + loc + "/" + cli + "/" + prog + "/" + proj + "/" + dept + "/" + role,
             contentType: 'application/json; charset=utf-8',
             success: function (Profiledata) {
                 ProfileGUI(Profiledata);
@@ -626,6 +634,7 @@ $(document).ready(function () {
     function GetChats(ChatID) {
         var _divChat = $("#others-chat");
         _divChat.empty();
+
         $.ajax({
             type: "GET",
             url: "/api/Chats/",

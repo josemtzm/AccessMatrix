@@ -55,6 +55,12 @@ $(document).ready(function () {
         else
             Prompt('', 'Security group is already added', 1);
     });
+
+    $('.ad_ou').on("select2:select", function (data) {
+        var itemFound = false;
+        var input = $("#ad-ou");
+        input.val(data.params.data.text);
+    });
     
     //save profile changes
     $("#b_save").click(function (e) {
@@ -142,6 +148,8 @@ $(document).ready(function () {
     function ClearUI() {
         $("#profile-id").val("");
         $("#profile-desc").val("");
+        $("#ad-ou").empty();
+        GetOU(-1);
         $("#ad-domain").empty();
         GetDomains(-1);
         $("#ad-ou").val("");
@@ -178,7 +186,7 @@ $(document).ready(function () {
         $('#dd_roles').prop('disabled', 'disabled');
 
         GetChats(-1);
-        //GetSecutityGroups();
+        GetOU(-1);
 
         var locations = $("#dd_locations");
 
@@ -248,6 +256,10 @@ $(document).ready(function () {
         ShowBusy(0);
     }
 
+    function formatRepoSelectionOU(repo) {
+        return repo.NAME || repo.DESCRIPTION || repo.DN;
+    }
+
     function formatRepoSelection(repo) {
         return repo.DOMAIN_NAME || repo.SEC_GROUP_NAME;
     }
@@ -303,32 +315,7 @@ $(document).ready(function () {
         var programs = $("#dd_programs");
 
         programs.empty();
-
-        //if ((loc !== "" && loc !== undefined) && (cli !== "" && cli !== undefined)) {
-
-        //    $.ajax({
-        //        type: "GET",
-        //        url: "/api/Programs/" + loc + "/" + cli,
-        //        contentType: 'application/json; charset=utf-8',
-        //        success: function (data) {
-        //            programs.prop('disabled', false);
-        //            var _select = $('<select class="selectpicker">');
-        //            $.each(data, function (index, elem) {
-        //                _select.append(
-        //                    $('<option></option>').val(elem.ProgramID).html(elem.ProgramName)
-        //                );
-        //            });
-        //            programs.append(_select.html());
-        //            programs.selectpicker('refresh');
-        //        },
-        //        error: function (jqXHR, exception) {
-        //            Prompt(jqXHR, exception, 0);
-        //        }
-        //    });
-
-        //}
-        //else
-            if (cli !== "" || cli !== undefined) {
+        if (cli !== "" || cli !== undefined) {
             $.ajax({
                 type: "GET",
                 url: "/api/GetPrograms/" + cli,
@@ -347,7 +334,7 @@ $(document).ready(function () {
                 error: function (jqXHR, exception) {
                     Prompt(jqXHR, exception, 0);
                 }
-            }); 
+            });
         }
         else {
             Prompt('', 'Select a client', 0);
@@ -358,31 +345,7 @@ $(document).ready(function () {
         var projects = $("#dd_projects");
 
         projects.empty();
-
-        //if ((loc !== "" && loc !== undefined) && (cli !== "" && cli !== undefined) && (prog !== "" && prog !== undefined)) {
-
-        //    $.ajax({
-        //        type: "GET",
-        //        url: "/api/Projects/" + loc + "/" + cli + "/" + prog,
-        //        contentType: 'application/json; charset=utf-8',
-        //        success: function (data) {
-        //            projects.prop('disabled', false);
-        //            var _select = $('<select class="selectpicker">');
-        //            $.each(data, function (index, elem) {
-        //                _select.append(
-        //                    $('<option></option>').val(elem.ProjectID).html(elem.ProjectName)
-        //                );
-        //            });
-        //            projects.append(_select.html());
-        //            projects.selectpicker('refresh');
-        //        },
-        //        error: function (jqXHR, exception) {
-        //            Prompt(jqXHR, exception, 0);
-        //        }
-        //    });
-        //}
-        //else
-            if (prog !== "" || prog !== undefined) {
+        if (prog !== "" || prog !== undefined) {
             $.ajax({
                 type: "GET",
                 url: "/api/GetProjects/" + prog,
@@ -440,30 +403,6 @@ $(document).ready(function () {
 
         roles.empty();
 
-        //if ((loc !== "" && loc !== undefined && loc !== null) && (cli !== "" && cli !== undefined && cli !== null) && (prog !== "" && prog !== undefined && prog !== null) 
-        //    && (proj !== "" && proj !== undefined && proj !== null) && (dept !== "" && dept !== undefined && dept !== null)) {
-
-        //    $.ajax({
-        //        type: "GET",
-        //        url: "/api/Roles/" + loc + "/" + cli + "/" + prog + "/" + proj + "/" + dept,
-        //        contentType: 'application/json; charset=utf-8',
-        //        success: function (data) {
-        //            roles.prop('disabled', false);
-        //            var _select = $('<select class="selectpicker">');
-        //            $.each(data, function (index, elem) {
-        //                _select.append(
-        //                    $('<option></option>').val(elem.RoleID).html(elem.RoleName)
-        //                );
-        //            });
-        //            roles.append(_select.html());
-        //            roles.selectpicker('refresh');
-        //        },
-        //        error: function (jqXHR, exception) {
-        //            Prompt(jqXHR, exception, 0);
-        //        }
-        //    });
-
-        //} else
         if (dept !== '' && dept !== undefined) {
             $.ajax({
                 type: "GET",
@@ -507,6 +446,77 @@ $(document).ready(function () {
                 Prompt(jqXHR, exception, 0);
             }
         });
+    }
+
+    function GetOUS(DN) {
+        var ous = [];
+        var ou = "";
+        var dom = "";
+        if (DN !== "" && DN !== undefined && DN !== -1) {
+            var listOU = DN.split(",");
+            var input = $("#ad-ou");
+
+            $.each(listOU, function (index, value) {
+                if (value.includes("OU="))
+                    ous.push(value.replace("OU=", ''));
+                else if (value.includes("DC=")) {
+                    if (value.includes("com"))
+                        dom += value.replace("DC=", '');
+                    else
+                        dom += value.replace("DC=", '') + '.';
+                }
+                
+            });
+        }
+
+        for (i = ous.length - 1; i >= 0; i--) {
+            ou += "/" + ous[i];
+        }
+
+        return dom + ou;
+    }
+
+    function GetOU(OU) {
+        $(".ad_ou").select2({
+            placeholder: "Domain.com/container/subcontainer",
+            minimumInputLength: 1,
+            ajax: {
+                url: "/api/OU/",
+                dataType: 'json',
+                type: 'GET',
+                data: function (params) {
+                    return {
+                        term: params.term, // search term
+                    };
+                },
+                processResults: function (data, params) {
+                    params.page = params.page || 1;
+
+                    var select2Data = $.map(data, function (obj) {
+                        obj.id = obj.OU_ID;
+                        obj.text = GetOUS(obj.DN);
+
+                        return obj;
+                    });
+
+                    return {
+                        results: select2Data,
+                        pagination: {
+                            more: (params.page * 10) < data.length
+                        }
+                    };
+                },
+                cache: true
+
+            },
+            escapeMarkup: function (markup) { return markup; },
+            templateSelection: formatRepoSelectionOU
+        });
+
+        if (OU !== "" && OU !== undefined && OU !== -1) {
+            var input = $("#ad-ou");
+            input.val(OU);
+        }
     }
 
     function GetDomains(DomainID) {
@@ -666,18 +676,12 @@ $(document).ready(function () {
                 url: "/api/SecurityGroups/",
                 dataType: 'json',
                 type: 'GET',
-                //delay: 250,
                 data: function (params) {
                     return {
                         term: params.term, // search term
-                        //page: params.page
                     };
                 },
                 processResults: function (data, params) {
-                    // parse the results into the format expected by Select2
-                    // since we are using custom formatting functions we do not need to
-                    // alter the remote JSON data, except to indicate that infinite
-                    // scrolling can be used
                     params.page = params.page || 1;
 
                     var select2Data = $.map(data, function (obj) {
@@ -725,6 +729,7 @@ $(document).ready(function () {
         $("#profile-id").val(Profiledata[0].ProfileID)
         $("#profile-desc").val(Profiledata[0].ProfileID)
 
+        GetOUS(-1);
         GetDomains(-1);
         GetSecGroups(-1);
         GetEmailDomains(-1);
@@ -746,8 +751,9 @@ $(document).ready(function () {
                     $("#profile-desc").val(Permissionsdata[0].Description);
 
                     // Permissions
+
                     GetDomains(Permissionsdata[0].DomainID);
-                    $("#ad-ou").val(Permissionsdata[0].OU);
+                    GetOU(Permissionsdata[0].OU);
                     $("#ad-loginscript").val(Permissionsdata[0].LogonScript);
                     GetProfileDrive(Permissionsdata[0].ProfileDrive);
                     //$("#ad-profiledrive").val(Permissionsdata[0].ProfileDrive);

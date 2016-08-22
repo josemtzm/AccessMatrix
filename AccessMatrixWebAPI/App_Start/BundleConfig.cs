@@ -31,7 +31,6 @@ namespace AccessMatrixWebAPI
                       "~/Content/bootstrap-select.css",
                       "~/Content/shared.css",
                       "~/Content/style.css",
-                      //"~/Content/css/select2.css",
                       "~/Content/select2.css",
                       "~/Content/site.css"));
 

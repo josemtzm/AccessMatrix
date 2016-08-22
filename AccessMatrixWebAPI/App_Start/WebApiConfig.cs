@@ -4,6 +4,10 @@ using System.Linq;
 using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
 using System.Web.Http.Cors;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Threading;
+using System.Net;
 
 namespace AccessMatrixWebAPI
 {
@@ -12,17 +16,10 @@ namespace AccessMatrixWebAPI
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
-            var enableCorsAttribute = new EnableCorsAttribute("*",
-                                               "Origin, Content-Type, Accept",
-                                               "GET, PUT, POST, DELETE, OPTIONS");
-            config.EnableCors(enableCorsAttribute);
-            //var cors = new EnableCorsAttribute("http://localhost:5555", "*", "*");
-            // enable  request for angularjs
-            //config.EnableCors(cors);
-            // Web API configuration and services
-            // Configure Web API to use only bearer token authentication.
-            //config.SuppressDefaultHostAuthentication();
-            //config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
+            var cors = new EnableCorsAttribute("*", "*", "*");
+            config.EnableCors(cors);
+            config.MessageHandlers.Add(new PreflightRequestsHandler());
+
             // Web API routes
             config.MapHttpAttributeRoutes();
 
@@ -32,5 +29,24 @@ namespace AccessMatrixWebAPI
                 defaults: new { id = RouteParameter.Optional }
             );
         }
+
+        public class PreflightRequestsHandler : DelegatingHandler
+        {
+            protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+            {
+                if (request.Headers.Contains("Origin") && request.Method.Method == "OPTIONS")
+                {
+                    var response = new HttpResponseMessage { StatusCode = HttpStatusCode.OK };
+                    response.Headers.Add("Access-Control-Allow-Origin", "*");
+                    response.Headers.Add("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization");
+                    response.Headers.Add("Access-Control-Allow-Methods", "*");
+                    var tsc = new TaskCompletionSource<HttpResponseMessage>();
+                    tsc.SetResult(response);
+                    return tsc.Task;
+                }
+                return base.SendAsync(request, cancellationToken);
+            }
+        }
+
     }
 }

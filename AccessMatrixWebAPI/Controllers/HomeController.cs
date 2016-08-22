@@ -16,7 +16,15 @@ namespace AccessMatrixWebAPI.Controllers
         [Authorize]
         public ActionResult Index()
         {
-            return View();
+            ViewBag.ErrorMsg = "User not authenticated.";
+
+            if (User.Identity.IsAuthenticated)
+                return View();
+            else
+            {
+                return View("Error");
+            }
+
         }
     }
 }

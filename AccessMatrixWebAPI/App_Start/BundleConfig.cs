@@ -26,13 +26,13 @@ namespace AccessMatrixWebAPI
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/normalize.css",
-                      "~/Content/bootstrap.css",
+                      //"~/Content/bootstrap.css",
                       "~/Content/bootstrap-theme.css",
                       "~/Content/bootstrap-select.css",
                       "~/Content/shared.css",
                       "~/Content/style.css",
                       "~/Content/select2.css",
-                      "~/Content/site.css"));
+                      "~/Content/site.css").Include("~/Content/bootstrap.css", new CssRewriteUrlTransform()));
 
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
                 "~/Content/themes/base/all.css"));

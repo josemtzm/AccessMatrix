@@ -2,27 +2,22 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <title>@ViewBag.Title</title>
-    @Styles.Render("~/Content/css")
-    @*@Styles.Render("~/Content/css/bootstrap")*@
-    @Styles.Render("~/Content/themes/base/css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/select2")
+    @Scripts.Render("~/bundles/custom")
+    @RenderSection("scripts", required: false)
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/themes/base/css")
+    
     </head>
 <body role="document">
     <div>
         @RenderBody()
-        @*<hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>*@
     </div>
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jqueryui")
-    @Scripts.Render("~/bundles/custom")
-    @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/bundles/select2")
-    @RenderSection("scripts", required: false)
 </body>
 </html>

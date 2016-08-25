@@ -97,7 +97,7 @@ $(document).ready(function () {
         if (ProfileID == -1) {
             $.ajax({
                 type: "POST",
-                url: "/api/Permissions/",
+                url: "/api/Permissions",
                 data: Permissions,
                 success: function (data) {
                     ShowBusy(0);
@@ -148,11 +148,11 @@ $(document).ready(function () {
     function ClearUI() {
         $("#profile-id").val("");
         $("#profile-desc").val("");
-        $("#ad-ou").empty();
+        $("#ad-ou").val("");
         GetOU(-1);
         $("#ad-domain").empty();
         GetDomains(-1);
-        $("#ad-ou").val("");
+        //$("#ad-ou").val("");
         $("#ad-loginscript").val("");
         GetProfileDrive(-1);
         $("#ad-profilepath").val("");
@@ -186,7 +186,6 @@ $(document).ready(function () {
         $('#dd_roles').prop('disabled', 'disabled');
 
         GetChats(-1);
-        GetOU(-1);
 
         var locations = $("#dd_locations");
 
@@ -196,6 +195,7 @@ $(document).ready(function () {
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
                 var _select = $('<select class="selectpicker">');
+                _select.append("<option disabled selected>Location Name</option>");
                 $.each(data, function (index, elem) {
                     _select.append(
                         $('<option></option>').val(elem.LocationID).html(elem.LocationName)
@@ -218,6 +218,7 @@ $(document).ready(function () {
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
                 var _select = $('<select class="selectpicker">');
+                _select.append("<option disabled selected>Client Name</option>");
                 $.each(data, function (index, elem) {
                     _select.append(
                         $('<option></option>').val(elem.ClientID).html(elem.ClientName)
@@ -240,6 +241,7 @@ $(document).ready(function () {
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
                 var _select = $('<select class="selectpicker">');
+                _select.append("<option disabled selected>Department Name</option>");
                 $.each(data, function (index, elem) {
                     _select.append(
                         $('<option></option>').val(elem.DepartmentID).html(elem.DepartmentName)
@@ -265,7 +267,7 @@ $(document).ready(function () {
     }
 
     function InitSelect() {
-        $("select").selectpicker({
+        $(".select_filter").selectpicker({
             size: 8
         });
     }
@@ -295,6 +297,7 @@ $(document).ready(function () {
                 contentType: 'application/json; charset=utf-8',
                 success: function (data) {
                     var _select = $('<select class="selectpicker">');
+                    _select.append("<option disabled selected>Client Name</option>");
                     $.each(data, function (index, elem) {
                         _select.append(
                             $('<option></option>').val(elem.ClientID).html(elem.ClientName)
@@ -323,6 +326,7 @@ $(document).ready(function () {
                 success: function (data) {
                     programs.prop('disabled', false);
                     var _select = $('<select class="selectpicker">');
+                    _select.append("<option disabled selected>Program Name</option>");
                     $.each(data, function (index, elem) {
                         _select.append(
                             $('<option></option>').val(elem.ProgramID).html(elem.ProgramName)
@@ -353,6 +357,7 @@ $(document).ready(function () {
                 success: function (data) {
                     projects.prop('disabled', false);
                     var _select = $('<select class="selectpicker">');
+                    _select.append("<option disabled selected>Project Name</option>");
                     $.each(data, function (index, elem) {
                         _select.append(
                             $('<option></option>').val(elem.ProjectID).html(elem.ProjectName)
@@ -382,6 +387,7 @@ $(document).ready(function () {
                 contentType: 'application/json; charset=utf-8',
                 success: function (data) {
                     var _select = $('<select class="selectpicker">');
+                    _select.append("<option disabled selected>Department Name</option>");
                     $.each(data, function (index, elem) {
                         _select.append(
                             $('<option></option>').val(elem.DepartmentID).html(elem.DepartmentName)
@@ -411,6 +417,7 @@ $(document).ready(function () {
                 success: function (data) {
                     roles.prop('disabled', false);
                     var _select = $('<select class="selectpicker">');
+                    _select.append("<option disabled selected>Role Name</option>");
                     $.each(data, function (index, elem) {
                         _select.append(
                             $('<option></option>').val(elem.RoleID).html(elem.RoleName)
@@ -480,6 +487,8 @@ $(document).ready(function () {
         $(".ad_ou").select2({
             placeholder: "Domain.com/container/subcontainer",
             minimumInputLength: 1,
+            //multiple: true,
+            quietMillis: 100,
             ajax: {
                 url: "/api/OU/",
                 dataType: 'json',
@@ -528,6 +537,7 @@ $(document).ready(function () {
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
                 var _select = $('<select class="selectpicker">');
+                _select.append("<option disabled selected>Select Domain</option>");
                 $.each(data, function (index, elem) {
                     if (elem.DomainID == DomainID)
                         _select.append(
@@ -566,6 +576,7 @@ $(document).ready(function () {
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
                 var _select = $('<select class="selectpicker">');
+                _select.append("<option disabled selected>Email Domain</option>");
                 $.each(data, function (index, elem) {
                     if (elem.EmailID == EmailDomainID)
                         _select.append(
@@ -595,6 +606,7 @@ $(document).ready(function () {
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
                 var _select = $('<select class="selectpicker">');
+                _select.append("<option disabled selected>Select WB</option>");
                 $.each(data, function (index, elem) {
                     if (elem.WorkboothID == WorkboothID)
                         _select.append(
@@ -614,7 +626,7 @@ $(document).ready(function () {
         });
     }
     function GetVPNs(VpnID) {
-        var vpns = $("#others-vp");
+        var vpns = $("#others-vpn");
         vpns.empty();
 
         $.ajax({
@@ -623,6 +635,7 @@ $(document).ready(function () {
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
                 var _select = $('<select class="selectpicker">');
+                _select.append("<option disabled selected>Select VPN</option>");
                 $.each(data, function (index, elem) {
                     if (elem.VpnID == VpnID)
                         _select.append(
@@ -670,7 +683,7 @@ $(document).ready(function () {
         $(".sec_group").select2({
             placeholder: "Domain\\Group Name",
             minimumInputLength: 1,
-            multiple: true,
+            //multiple: true,
             quietMillis: 100,
             ajax: {
                 url: "/api/SecurityGroups/",

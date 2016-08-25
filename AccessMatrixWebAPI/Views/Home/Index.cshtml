@@ -24,43 +24,42 @@
                         <div class="form-group">
                             <label for="dd_locations" class="col-lg-4 col-sm-4 control-label">LOCATION</label>
                             <div class="col-lg-6 col-sm-6">
-                                <select id="dd_locations" class="form-control" data-live-search="true" data-size="auto" title="Location Name" required>
-                                </select>
+                                <select id="dd_locations" class="select_filter form-control" data-live-search="true" data-size="auto" title="Location Name" required></select>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="dd_clients" class="col-lg-4 col-sm-4 control-label">CLIENT</label>
                             <div class="col-lg-6 col-sm-6">
-                                <select id="dd_clients" class="form-control" data-live-search="true" data-size="auto" title="Client Name" required></select>
+                                <select id="dd_clients" class="select_filter form-control" data-live-search="true" data-size="auto" title="Client Name" required></select>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="dd_departments" class="col-lg-4 col-sm-4 control-label">DEPARTMENT</label>
                             <div class="col-lg-6 col-sm-6">
-                                <select id="dd_departments" class="form-control" data-live-search="true" data-size="auto" title="Department Name" required></select>
+                                <select id="dd_departments" class="select_filter form-control" data-live-search="true" data-size="auto" title="Department Name" required></select>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="dd_programs" class="col-lg-4 col-sm-4 control-label">PROGRAM</label>
                             <div class="col-lg-6 col-sm-6">
-                                <select id="dd_programs" class="form-control" data-live-search="true" data-size="auto" title="Program Name" required></select>
+                                <select id="dd_programs" class="select_filter form-control" data-live-search="true" data-size="auto" title="Program Name" required></select>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="dd_projects" class="col-lg-4 col-sm-4 control-label">PROJECT</label>
                             <div class="col-lg-6 col-sm-6">
-                                <select id="dd_projects" class="form-control" data-live-search="true" data-size="auto" title="Project Name" required></select>
+                                <select id="dd_projects" class="select_filter form-control" data-live-search="true" data-size="auto" title="Project Name" required></select>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="dd_roles" class="col-lg-4 col-sm-4 control-label">ROLE</label>
                             <div class="col-lg-6 col-sm-6">
-                                <select id="dd_roles" class="form-control" data-live-search="true" data-size="auto" title="Role Name" required></select>
+                                <select id="dd_roles" class="select_filter form-control" data-live-search="true" data-size="auto" title="Role Name" required></select>
                             </div>
                         </div>
                     </div>
@@ -106,7 +105,7 @@
                                         <div class="form-group">
                                             <label for="ad-domain" class="col-md-2 col-sm-2 control-label">Domain</label>
                                             <div class="col-md-10 col-sm-10">
-                                                <select id="ad-domain" class="form-control" name="ad-domain" data-live-search="true" data-size="auto" title="Select Domain">
+                                                <select id="ad-domain" class="select_filter form-control" name="ad-domain" data-live-search="true" data-size="auto" title="Select Domain">
                                                 </select>
                                             </div>
                                         </div>
@@ -114,7 +113,7 @@
                                         <div class="form-group">
                                             <label for="ad-ou" class="col-md-2 col-sm-2 control-label">OU</label>
                                             <div class="col-md-10 col-sm-10">
-                                                <select class="ad_ou form-control dropdown"></select>
+                                                <select id="ad_ou_select" class="ad_ou form-control dropdown" name="ad_ou_select"></select>
                                                 <input id="ad-ou" type="text" class="form-control" name="ad-ou" placeholder="domain.com/container/subcontainer" disabled />
                                             </div>
                                         </div>
@@ -129,7 +128,7 @@
 
                                         <div class="form-group">
                                             <label for="ad-profiledrive" class="col-md-2 col-sm-2 control-label">Shared Drive</label>
-                                            <div class="col-md-10 col-sm-10 form-inline">
+                                            <div class="col-md-10 col-sm-10">
                                                 <select id="ad-profiledrive" class="form-control" name="ad-profiledrive" data-live-search="true" data-size="auto" title="Drive">
                                                     @for (int x = 78; x <= 90; x++)
                                                     {
@@ -178,7 +177,7 @@
                                             <div class="form-group">
                                                 <label for="email-domain" class="col-md-4 col-sm-4 control-label">Domain</label>
                                                 <div class="col-md-8 col-sm-8">
-                                                    <select class="form-control" name="email-domain" id="email-domain" data-live-search="true" data-size="auto" title="Email Domain">
+                                                    <select class="select_filter form-control" name="email-domain" id="email-domain" data-live-search="true" data-size="auto" title="Email Domain">
                                                     </select>
                                                 </div>
                                             </div>
@@ -225,15 +224,15 @@
                                             <div class="form-group">
                                                 <label for="others-workbooth" class="col-md-2 col-sm-2 control-label">WB</label>
                                                 <div class="col-md-10 col-sm-10">
-                                                    <select id="others-workbooth" class="form-control col-sm-10" name="others-workbooth" data-live-search="true" data-size="auto" title="Select WB">
+                                                    <select id="others-workbooth" class="select_filter form-control col-sm-10" name="others-workbooth" data-live-search="true" data-size="auto" title="Select WB">
                                                     </select>
                                                 </div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="others-vp" class="col-md-2 col-sm-2 control-label"> VPN </label>
+                                                <label for="others-vpn" class="col-md-2 col-sm-2 control-label"> VPN </label>
                                                 <div class="col-md-10 col-sm-10">
-                                                    <select id="others-vp" class="form-control" name="others-vpn" data-live-search="true" data-size="auto" title="Select VPN">
+                                                    <select id="others-vpn" class="select_filter form-control" name="others-vpn" data-live-search="true" data-size="auto" title="Select VPN">
                                                     </select>
                                                 </div>
                                             </div>
